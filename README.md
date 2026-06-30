@@ -1,8 +1,8 @@
-<h1 align="center">RoadToUAS-BigDataScience</h1>
+<div align="center">
+  <h1>RoadToUAS-BigDataScience</h1>
+</div>
 
-<p align="center">
-  AI CLI workflow for a Big Data Science final project, built around a Tableau-based <strong>Supermarket Sales Analysis</strong> case study.
-</p>
+AI CLI workflow for a Big Data Science final project, built around a Tableau-based **Supermarket Sales Analysis** case study.
 
 Repository ini berisi project UAS mata kuliah Big Data Science dengan pendekatan yang sedikit berbeda: bukan hanya membuat dashboard Tableau, tetapi juga membangun alur kerja yang bisa dibaca dan dieksekusi oleh AI CLI seperti Codex, OpenCode, Gemini CLI, Antigravity CLI, Kiro CLI, atau tool sejenis.
 
