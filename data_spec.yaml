@@ -1,0 +1,256 @@
+# Data Specification for Supermarket Sales Analysis
+# Structured metadata for AI CLI processing
+
+project:
+  name: "Supermarket Sales Analysis"
+  dataset: "supermarket_sales.csv"
+  dataset_path: "datasets/retail/supermarket_sales.csv"
+  rows: 1000
+  columns: 17
+  date_range: "2019-01-01 to 2019-03-09"
+  cleanliness_summary:
+    missing_values: 0
+    duplicate_invoice_ids: 0
+    categorical_format: "consistent"
+    required_preparation:
+      - "Parse Date from string M/D/YYYY to Date in Tableau"
+      - "Use Time string HH:MM to create Hour = INT(LEFT([Time], 2))"
+  branches:
+    - code: "A"
+      city: "Yangon"
+    - code: "B"
+      city: "Mandalay"
+    - code: "C"
+      city: "Naypyitaw"
+
+fields:
+  - name: "Invoice ID"
+    current_type: "string"
+    target_type: "string"
+    role: "dimension"
+    description: "Unique transaction identifier"
+
+  - name: "Branch"
+    current_type: "string"
+    target_type: "string"
+    role: "dimension"
+    categories: ["A", "B", "C"]
+    description: "Branch code"
+
+  - name: "City"
+    current_type: "string"
+    target_type: "string"
+    role: "dimension"
+    categories: ["Yangon", "Mandalay", "Naypyitaw"]
+    description: "City location"
+
+  - name: "Customer type"
+    current_type: "string"
+    target_type: "string"
+    role: "dimension"
+    categories: ["Member", "Normal"]
+    description: "Customer loyalty status"
+
+  - name: "Gender"
+    current_type: "string"
+    target_type: "string"
+    role: "dimension"
+    categories: ["Male", "Female"]
+    description: "Customer gender"
+
+  - name: "Product line"
+    current_type: "string"
+    target_type: "string"
+    role: "dimension"
+    categories:
+      - "Electronic accessories"
+      - "Fashion accessories"
+      - "Food and beverages"
+      - "Health and beauty"
+      - "Home and lifestyle"
+      - "Sports and travel"
+    description: "Product category"
+
+  - name: "Unit price"
+    current_type: "number"
+    target_type: "number"
+    role: "measure"
+    min: 10.08
+    max: 99.96
+    description: "Price per unit in USD"
+
+  - name: "Quantity"
+    current_type: "number"
+    target_type: "number"
+    role: "measure"
+    min: 1
+    max: 10
+    description: "Units purchased"
+
+  - name: "Tax 5%"
+    current_type: "number"
+    target_type: "number"
+    role: "measure"
+    description: "5% tax amount"
+
+  - name: "Total"
+    current_type: "number"
+    target_type: "number"
+    role: "measure"
+    min: 10.68
+    max: 1042.65
+    description: "Transaction total after tax"
+
+  - name: "Date"
+    current_type: "string"
+    target_type: "date"
+    role: "dimension"
+    format: "M/D/YYYY"
+    description: "Transaction date - requires parsing"
+
+  - name: "Time"
+    current_type: "string"
+    target_type: "datetime"
+    role: "dimension"
+    format: "HH:MM"
+    description: "Transaction time - extract hour"
+
+  - name: "Payment"
+    current_type: "string"
+    target_type: "string"
+    role: "dimension"
+    categories: ["Cash", "Ewallet", "Credit card"]
+    description: "Payment method"
+
+  - name: "cogs"
+    current_type: "number"
+    target_type: "number"
+    role: "measure"
+    description: "Cost of goods sold"
+
+  - name: "gross margin percentage"
+    current_type: "number"
+    target_type: "number"
+    role: "measure"
+    fixed_value: 4.761904762
+    description: "Fixed gross margin %"
+
+  - name: "gross income"
+    current_type: "number"
+    target_type: "number"
+    role: "measure"
+    description: "Gross profit"
+
+  - name: "Rating"
+    current_type: "number"
+    target_type: "number"
+    role: "measure"
+    min: 4.0
+    max: 10.0
+    description: "Customer satisfaction 1-10"
+
+calculated_fields:
+  - name: "Hour"
+    formula: "INT(LEFT([Time], 2))"
+    return_type: "number"
+    description: "Extract hour from Time string"
+
+  - name: "Day of Week"
+    formula: "DATENAME('weekday', [Date])"
+    return_type: "string"
+    description: "Day name from Date"
+
+  - name: "Month"
+    formula: "DATENAME('month', [Date])"
+    return_type: "string"
+    description: "Month name from Date"
+
+  - name: "Revenue per Unit"
+    formula: "[Total] / [Quantity]"
+    return_type: "number"
+    description: "Average price per unit sold"
+
+  - name: "Rating Category"
+    formula: "IF [Rating] >= 9 THEN 'High' ELSEIF [Rating] >= 7 THEN 'Medium' ELSE 'Low' END"
+    return_type: "string"
+    description: "Categorize rating"
+
+  - name: "Transaction Size"
+    formula: "IF [Quantity] >= 7 THEN 'Large' ELSEIF [Quantity] >= 4 THEN 'Medium' ELSE 'Small' END"
+    return_type: "string"
+    description: "Size by quantity"
+
+  - name: "Week Number"
+    formula: "DATEPART('week', [Date])"
+    return_type: "number"
+    description: "Week of year"
+
+validation_rules:
+  missing_values:
+    expected: 0
+    check_all_columns: true
+  
+  duplicates:
+    field: "Invoice ID"
+    count_expected: 1000
+    count_distinct_expected: 1000
+  
+  format_consistency:
+    fields: ["City", "Branch", "Customer type", "Gender", "Product line", "Payment"]
+    check: "unique_values_consistent"
+  
+  outliers:
+    method: "IQR"
+    fields: ["Total", "Unit price", "Quantity", "Rating", "gross income"]
+    expected: "no_extreme_outliers"
+  
+  numeric_relationships:
+    - check: "Total = cogs + gross income"
+      tolerance: 0.01
+    - check: "gross income = Total - cogs"
+      tolerance: 0.01
+    - check: "Tax 5% = Total * 5/105"
+      tolerance: 0.01
+
+precomputed_metrics:
+  total_revenue: 322966.75
+  total_transactions: 1000
+  avg_rating: 6.97
+  cities:
+    Yangon:
+      transactions: 340
+      revenue: 106200.37
+      avg_rating: 7.03
+      aov: 312.35
+    Mandalay:
+      transactions: 332
+      revenue: 106197.67
+      avg_rating: 6.82
+      aov: 319.87
+    Naypyitaw:
+      transactions: 328
+      revenue: 110568.71
+      avg_rating: 7.07
+      aov: 337.10
+  
+  product_lines:
+    "Food and beverages": { revenue: 56144.84, pct: 17.38, rating: 7.11 }
+    "Sports and travel": { revenue: 55122.83, pct: 17.07, rating: 6.92 }
+    "Electronic accessories": { revenue: 54337.53, pct: 16.82, rating: 6.92 }
+    "Fashion accessories": { revenue: 54305.89, pct: 16.81, rating: 7.03 }
+    "Home and lifestyle": { revenue: 53861.91, pct: 16.68, rating: 6.84 }
+    "Health and beauty": { revenue: 49193.74, pct: 15.23, rating: 7.00 }
+  
+  customer_types:
+    Member: { transactions: 501, revenue: 164223.44, aov: 327.79, rating: 6.94 }
+    Normal: { transactions: 499, revenue: 158743.31, aov: 318.12, rating: 7.01 }
+  
+  payment_methods:
+    Cash: { transactions: 344, revenue: 112206.57, rating: 6.97 }
+    Ewallet: { transactions: 345, revenue: 109993.11, rating: 6.95 }
+    "Credit card": { transactions: 311, revenue: 100767.07, rating: 7.00 }
+  
+  hourly_peak:
+    hour: 19
+    transactions: 113
+    revenue: 39699.51
