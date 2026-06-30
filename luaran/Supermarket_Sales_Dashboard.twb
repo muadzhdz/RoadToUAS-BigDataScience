@@ -1,0 +1,196 @@
+<?xml version="1.0" ?>
+<workbook version="2023.4" source-platform="win" source-build="2023.4.0">
+  <datasource name="supermarket_sales" caption="Supermarket Sales" inline="true" version="2023.4">
+    <connection class="csv" filename="supermarket_sales.csv" header="true" sep=","/>
+    <columns>
+      <column name="[Invoice ID]" datatype="string" role="dimension" type="nominal"/>
+      <column name="[Branch]" datatype="string" role="dimension" type="nominal"/>
+      <column name="[City]" datatype="string" role="dimension" type="nominal"/>
+      <column name="[Customer type]" datatype="string" role="dimension" type="nominal"/>
+      <column name="[Gender]" datatype="string" role="dimension" type="nominal"/>
+      <column name="[Product line]" datatype="string" role="dimension" type="nominal"/>
+      <column name="[Unit price]" datatype="integer" role="measure" type="quantitative"/>
+      <column name="[Quantity]" datatype="integer" role="measure" type="quantitative"/>
+      <column name="[Tax 5%]" datatype="integer" role="measure" type="quantitative"/>
+      <column name="[Total]" datatype="integer" role="measure" type="quantitative"/>
+      <column name="[Date]" datatype="date" role="dimension" type="nominal"/>
+      <column name="[Time]" datatype="datetime" role="dimension" type="nominal"/>
+      <column name="[Payment]" datatype="string" role="dimension" type="nominal"/>
+      <column name="[cogs]" datatype="integer" role="measure" type="quantitative"/>
+      <column name="[gross margin percentage]" datatype="integer" role="measure" type="quantitative"/>
+      <column name="[gross income]" datatype="integer" role="measure" type="quantitative"/>
+      <column name="[Rating]" datatype="integer" role="measure" type="quantitative"/>
+      <column name="[Hour]" datatype="number" role="measure" type="quantitative" formula="INT(LEFT([Time], 2))"/>
+      <column name="[Day of Week]" datatype="string" role="dimension" type="nominal" formula="DATENAME('weekday', [Date])"/>
+      <column name="[Month]" datatype="string" role="dimension" type="nominal" formula="DATENAME('month', [Date])"/>
+      <column name="[Revenue per Unit]" datatype="number" role="measure" type="quantitative" formula="[Total] / [Quantity]"/>
+      <column name="[Rating Category]" datatype="string" role="dimension" type="nominal" formula="IF [Rating] &gt;= 9 THEN 'High' ELSEIF [Rating] &gt;= 7 THEN 'Medium' ELSE 'Low' END"/>
+      <column name="[Transaction Size]" datatype="string" role="dimension" type="nominal" formula="IF [Quantity] &gt;= 7 THEN 'Large' ELSEIF [Quantity] &gt;= 4 THEN 'Medium' ELSE 'Small' END"/>
+      <column name="[Week Number]" datatype="number" role="measure" type="quantitative" formula="DATEPART('week', [Date])"/>
+    </columns>
+  </datasource>
+  <worksheet name="Revenue Trend">
+    <table/>
+    <view>
+      <panes>
+        <pane selection-relaxation-option="selection-relaxation-allow">
+          <mark class="Automatic">
+            <encodings>
+              <columns>
+                <encoding field="[Date]" type="nominal" granularity="day" continuous="true"/>
+              </columns>
+              <rows>
+                <encoding field="[Total]" type="quantitative" aggregation="SUM"/>
+              </rows>
+              <color>
+                <encoding field="[City]" type="nominal"/>
+              </color>
+            </encodings>
+          </mark>
+        </pane>
+      </panes>
+    </view>
+    <filters>
+      <filter class="categorical" field="[City]" ui="dropdown"/>
+      <filter class="categorical" field="[Product line]" ui="dropdown"/>
+    </filters>
+  </worksheet>
+  <worksheet name="Product Performance">
+    <table/>
+    <view>
+      <panes>
+        <pane selection-relaxation-option="selection-relaxation-allow">
+          <mark class="Automatic">
+            <encodings>
+              <columns>
+                <encoding field="[Total]" type="quantitative" aggregation="SUM"/>
+              </columns>
+              <rows>
+                <encoding field="[Product line]" type="nominal"/>
+              </rows>
+              <color>
+                <encoding field="[City]" type="nominal" stack="true"/>
+              </color>
+              <label>
+                <encoding field="[Total]" type="quantitative" format="currency"/>
+              </label>
+            </encodings>
+          </mark>
+        </pane>
+      </panes>
+    </view>
+    <sort field="[SUM(Total)]" direction="desc"/>
+  </worksheet>
+  <worksheet name="Customer Analysis">
+    <table/>
+    <view>
+      <panes>
+        <pane selection-relaxation-option="selection-relaxation-allow">
+          <mark class="Automatic">
+            <encodings>
+              <columns>
+                <encoding field="[Customer type]" type="nominal"/>
+              </columns>
+              <rows>
+                <encoding field="[Total]" type="quantitative" aggregation="SUM"/>
+              </rows>
+              <color>
+                <encoding field="[Product line]" type="nominal"/>
+              </color>
+              <label>
+                <encoding field="[Total]" type="quantitative" format="currency"/>
+              </label>
+            </encodings>
+          </mark>
+        </pane>
+      </panes>
+    </view>
+  </worksheet>
+  <worksheet name="Hourly Activity">
+    <table/>
+    <view>
+      <panes>
+        <pane selection-relaxation-option="selection-relaxation-allow">
+          <mark class="Automatic">
+            <encodings>
+              <columns>
+                <encoding field="[Hour]" type="nominal"/>
+              </columns>
+              <rows>
+                <encoding field="[Invoice ID]" type="quantitative" aggregation="COUNT"/>
+              </rows>
+              <color>
+                <encoding field="[City]" type="nominal"/>
+              </color>
+              <label>
+                <encoding field="[Invoice ID]" type="quantitative" aggregation="COUNT"/>
+              </label>
+            </encodings>
+          </mark>
+        </pane>
+      </panes>
+    </view>
+    <sort field="[Hour]" direction="asc"/>
+  </worksheet>
+  <worksheet name="City Comparison">
+    <table/>
+    <view>
+      <panes>
+        <pane selection-relaxation-option="selection-relaxation-allow">
+          <mark class="Automatic">
+            <encodings>
+              <columns>
+                <encoding field="[City]" type="nominal"/>
+              </columns>
+              <rows>
+                <encoding field="[Total]" type="quantitative" aggregation="SUM" format="currency"/>
+                <encoding field="[Rating]" type="quantitative" aggregation="AVG" format="number_2dp"/>
+                <encoding field="[Quantity]" type="quantitative" aggregation="SUM"/>
+              </rows>
+              <color>
+                <encoding field="[metric]" type="nominal" generated="true"/>
+              </color>
+            </encodings>
+          </mark>
+        </pane>
+      </panes>
+    </view>
+  </worksheet>
+  <worksheet name="Rating Distribution">
+    <table/>
+    <view>
+      <panes>
+        <pane selection-relaxation-option="selection-relaxation-allow">
+          <mark class="Automatic">
+            <encodings>
+              <columns>
+                <encoding field="[Rating]" type="nominal"/>
+              </columns>
+              <rows>
+                <encoding field="[Invoice ID]" type="quantitative" aggregation="COUNT"/>
+              </rows>
+              <color>
+                <encoding field="[Product line]" type="nominal"/>
+              </color>
+            </encodings>
+          </mark>
+        </pane>
+      </panes>
+    </view>
+  </worksheet>
+  <dashboard name="Supermarket Sales Dashboard">
+    <size width="1200" height="900" fixed="true"/>
+    <zones>
+      <zone type="title" h="80" w="1200" x="0" y="0">
+        <title>Supermarket Sales Dashboard — Jan-Mar 2019</title>
+      </zone>
+      <zone type="filter" h="60" w="1200" x="0" y="80"/>
+      <zone type="worksheet" name="Revenue Trend" x="0" y="140" w="600" h="250"/>
+      <zone type="worksheet" name="Product Performance" x="600" y="140" w="600" h="250"/>
+      <zone type="worksheet" name="Customer Analysis" x="0" y="390" w="600" h="250"/>
+      <zone type="worksheet" name="Hourly Activity" x="600" y="390" w="600" h="250"/>
+      <zone type="worksheet" name="City Comparison" x="0" y="640" w="1200" h="250"/>
+      <zone type="parameter-control" parameter="Top N Products" x="20" y="1390" w="200" h="40"/>
+    </zones>
+  </dashboard>
+</workbook>

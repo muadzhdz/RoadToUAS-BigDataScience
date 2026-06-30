@@ -1,0 +1,144 @@
+{
+  "dashboard": {
+    "name": "Supermarket Sales Dashboard",
+    "size": { "width": 1200, "height": 900 },
+    "background": "white"
+  },
+  "sheets": [
+    {
+      "name": "Revenue Trend",
+      "type": "line_chart",
+      "columns": { "field": "Date", "granularity": "day", "continuous": true },
+      "rows": { "field": "Total", "aggregation": "SUM" },
+      "color": { "field": "City", "palette": "categorical" },
+      "filters": ["City", "Product line"],
+      "tooltip": ["Date", "City", "SUM(Total)"],
+      "title": "Tren Penjualan Harian per Cabang"
+    },
+    {
+      "name": "Product Performance",
+      "type": "bar_chart",
+      "rows": { "field": "Product line" },
+      "columns": { "field": "Total", "aggregation": "SUM" },
+      "color": { "field": "City", "stack": true },
+      "labels": { "field": "Total", "format": "currency" },
+      "sort": { "by": "SUM(Total)", "order": "desc" },
+      "title": "Revenue per Product Line"
+    },
+    {
+      "name": "Customer Analysis",
+      "type": "stacked_bar",
+      "columns": { "field": "Customer type" },
+      "rows": { "field": "Total", "aggregation": "SUM" },
+      "color": { "field": "Product line" },
+      "labels": { "field": "Total", "format": "currency" },
+      "title": "Member vs Normal per Product Line"
+    },
+    {
+      "name": "Hourly Activity",
+      "type": "bar_chart",
+      "columns": { "field": "Hour", "type": "discrete" },
+      "rows": { "field": "Invoice ID", "aggregation": "COUNT" },
+      "color": { "field": "City" },
+      "labels": { "field": "Invoice ID", "aggregation": "COUNT" },
+      "sort": { "by": "Hour", "order": "asc" },
+      "title": "Distribusi Transaksi per Jam"
+    },
+    {
+      "name": "City Comparison",
+      "type": "side_by_side_bar",
+      "columns": { "field": "City" },
+      "rows": [
+        { "field": "Total", "aggregation": "SUM", "format": "currency" },
+        { "field": "Rating", "aggregation": "AVG", "format": "number_2dp" },
+        { "field": "Quantity", "aggregation": "SUM" }
+      ],
+      "color": { "by": "metric", "palette": "diverging" },
+      "title": "Perbandingan Metrik antar Cabang"
+    },
+    {
+      "name": "Rating Distribution",
+      "type": "histogram",
+      "columns": { "field": "Rating", "bin_size": 1 },
+      "rows": { "field": "Invoice ID", "aggregation": "COUNT" },
+      "color": { "field": "Product line" },
+      "reference_line": { "value": 6.97, "type": "average", "color": "red" },
+      "title": "Distribusi Rating Pelanggan"
+    }
+  ],
+  "quick_filters": [
+    {
+      "name": "City",
+      "field": "City",
+      "type": "single_value_dropdown",
+      "default": "All",
+      "apply_to": "all_sheets"
+    },
+    {
+      "name": "Product Line",
+      "field": "Product line",
+      "type": "single_value_dropdown",
+      "default": "All",
+      "apply_to": "all_sheets"
+    }
+  ],
+  "filter_actions": [
+    {
+      "name": "Filter by City",
+      "source_sheet": "Revenue Trend",
+      "target_sheets": ["Product Performance", "Customer Analysis", "Hourly Activity", "City Comparison", "Rating Distribution"],
+      "source_field": "City",
+      "target_field": "City",
+      "run_on": "select",
+      "clear_on": "deselect"
+    }
+  ],
+  "parameters": [
+    {
+      "name": "Top N Products",
+      "data_type": "integer",
+      "allowable_values": "range",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "default": 6,
+      "control_type": "slider",
+      "applied_to": {
+        "sheet": "Product Performance",
+        "filter": {
+          "field": "Product line",
+          "type": "top_n",
+          "n": "[Top N Products]",
+          "by_field": "SUM(Total)",
+          "order": "desc"
+        }
+      }
+    }
+  ],
+  "layout": {
+    "title_zone": { "height": 80, "text": "Supermarket Sales Dashboard — Jan-Mar 2019", "subtitle": "Total Revenue: $322,966.75 | Avg Rating: 6.97/10 | Transactions: 1,000" },
+    "filter_zone": { "height": 60, "filters": ["City", "Product line"] },
+    "grid": {
+      "rows": 3,
+      "cols": 2,
+      "placements": [
+        { "sheet": "Revenue Trend", "row": 0, "col": 0 },
+        { "sheet": "Product Performance", "row": 0, "col": 1 },
+        { "sheet": "Customer Analysis", "row": 1, "col": 0 },
+        { "sheet": "Hourly Activity", "row": 1, "col": 1 },
+        { "sheet": "City Comparison", "row": 2, "col": 0, "colspan": 2 }
+      ]
+    }
+  },
+  "styling": {
+    "city_colors": {
+      "Yangon": "#3498db",
+      "Mandalay": "#e67e22",
+      "Naypyitaw": "#27ae60"
+    },
+    "font": "Arial",
+    "title_size": 24,
+    "axis_size": 12,
+    "tooltip_size": 11
+  }
+}

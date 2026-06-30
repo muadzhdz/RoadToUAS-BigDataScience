@@ -1,0 +1,21 @@
+__pycache__/
+*.pyc
+.DS_Store
+.env
+.venv/
+venv/
+
+# Local exports and heavy binary deliverables
+*.twbx
+*.hyper
+*.tde
+*.docx
+*.pptx
+*.pdf
+
+# Runtime/generated temporary files
+*.log
+*.tmp
+
+# Local screenshots from Tableau/desktop work
+screenshots/
