@@ -1,7 +1,7 @@
 # Slide Presentasi UAS Big Data Science
 ## Supermarket Sales Analysis
 
-**Anggota Kelompok:** Mu'adz Hudzaifah (24903460014), Alhaq Sabilil Izati (24903460012), Arfan Ghifari
+**Anggota Kelompok:** Mu'adz Hudzaifah (24903460014), Alhaq Sabilil Izati (24903460012), Arfan Ghifari (24903460016)
 **Tools:** Tableau Desktop
 
 ---
@@ -35,7 +35,7 @@ Catatan: file ini adalah draft konten presentasi maksimal 15 slide. Masukkan scr
 │                                         │
 │   Mu'adz Hudzaifah — [NIM]                     │
 │   Alhaq Sabilil Izati — [NIM]                     │
-│   Arfan Ghifari — [NIM]                     │
+│   Arfan Ghifari (24903460016) — [NIM]                     │
 │                                         │
 │   Dosen: [Nama Dosen]                  │
 │   [Universitas]                        │
@@ -442,7 +442,7 @@ Catatan: file ini adalah draft konten presentasi maksimal 15 slide. Masukkan scr
 │    Kontak:                             │
 │    Mu'adz Hudzaifah — [NIM] — [IG/WA]         │
 │    Alhaq Sabilil Izati — [NIM] — [IG/WA]         │
-│    Arfan Ghifari — [NIM] — [IG/WA]         │
+│    Arfan Ghifari (24903460016) — [NIM] — [IG/WA]         │
 │                                         │
 │    [FOLDER] Dashboard:                       │
 │    [Link Tableau Public / QR Code]     │
