@@ -1,4 +1,4 @@
-# [SLIDES] KONTEN PRESENTASI SIAP PAKAI — 15 SLIDE
+﻿# [SLIDES] KONTEN PRESENTASI SIAP PAKAI — 15 SLIDE
 ## Supermarket Sales Analysis — Big Data Science
 
 ---
@@ -22,9 +22,9 @@
 │                                         │
 │   BIG DATA SCIENCE — UAS               │
 │                                         │
-│   [Nama 1] — [NIM]                     │
-│   [Nama 2] — [NIM]                     │
-│   [Nama 3] — [NIM]                     │
+│   Mu'adz Hudzaifah — [NIM]                     │
+│   Alhaq Sabilil Izati — [NIM]                     │
+│   Arfan Ghifari — [NIM]                     │
 │                                         │
 │   Dosen: [Nama Dosen]                  │
 │   [Universitas]                        │
@@ -429,9 +429,9 @@
 │    Terima kasih Any Questions?                   │
 │                                         │
 │    Kontak:                             │
-│    [Nama 1] — [NIM] — [IG/WA]         │
-│    [Nama 2] — [NIM] — [IG/WA]         │
-│    [Nama 3] — [NIM] — [IG/WA]         │
+│    Mu'adz Hudzaifah — [NIM] — [IG/WA]         │
+│    Alhaq Sabilil Izati — [NIM] — [IG/WA]         │
+│    Arfan Ghifari — [NIM] — [IG/WA]         │
 │                                         │
 │    [FOLDER] Dashboard:                       │
 │    [Link Tableau Public / QR Code]     │

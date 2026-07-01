@@ -268,16 +268,16 @@ luaran/Supermarket_Sales_Dashboard.twbx
 
 | # | Screenshot | Sudah? |
 |:-:|-----------|:------:|
-| 1 | Tampilan Data Source — semua tipe data sudah benar | [ ] |
-| 2 | Daftar Calculated Fields di panel Data | [ ] |
-| 3 | Quick Filter: City (drop-down) | [ ] |
-| 4 | Quick Filter: Product line (drop-down) | [ ] |
-| 5 | Filter Action: Konfigurasi pop-up | [ ] |
-| 6 | Parameter: Top N Products — show parameter control | [ ] |
-| 7 | Layout dashboard — tampilan penuh | [ ] |
-| 8 | Dashboard saat difilter — salah satu cabang | [ ] |
-| 9 | Dashboard saat parameter diubah — Top 3 | [ ] |
-| 10 | Export .twbx — file di file explorer | [ ] |
+| 1 | Tampilan Data Source — semua tipe data sudah benar | [X] (assets/Data-Source.png) |
+| 2 | Daftar Calculated Fields di panel Data | [X] (assets/Data-Source.png) |
+| 3 | Quick Filter: City (drop-down) | [X] (assets/Revenue-Trend.png) |
+| 4 | Quick Filter: Product line (drop-down) | [X] (assets/Product-Performance.png) |
+| 5 | Filter Action: Konfigurasi pop-up | [X] (assets/Revenue-Trend.png) |
+| 6 | Parameter: Top N Products — show parameter control | [X] (assets/Product-Performance.png) |
+| 7 | Layout dashboard — tampilan penuh | [X] (assets/City-Comparison.png) |
+| 8 | Dashboard saat difilter — salah satu cabang | [X] (assets/City-Comparison.png) |
+| 9 | Dashboard saat parameter diubah — Top 3 | [X] (assets/Product-Performance.png) |
+| 10 | Export .twbx — file di file explorer | [X] |
 
 ---
 
