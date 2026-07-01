@@ -35,7 +35,7 @@ def main() -> None:
         "# Laporan UAS Big Data Science",
         "## Analisis Data Penjualan Supermarket Menggunakan Tableau",
         "",
-        "**Anggota Kelompok:** [Nama 1 - NIM], [Nama 2 - NIM], [Nama 3 - NIM]",
+        "**Anggota Kelompok:** Mu'adz Hudzaifah (24903460014), Alhaq Sabilil Izati (24903460012), Arfan Ghifari",
         "**Dosen:** Nur Choiriyati",
         "**Dataset:** Supermarket Sales",
         "**Tools:** Tableau Desktop, Python",

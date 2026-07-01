@@ -1,7 +1,7 @@
-# Supermarket Sales Analysis Project
+﻿# Supermarket Sales Analysis Project
 ## AI CLI Execution Scenario
 
-**Group Members:** [Anggota 1 - NIM], [Anggota 2 - NIM], [Anggota 3 - NIM]
+**Group Members:** Mu'adz Hudzaifah (24903460014), Alhaq Sabilil Izati (24903460012), Arfan Ghifari
 **Dataset:** supermarket_sales.csv
 **Dataset Path:** `datasets/retail/supermarket_sales.csv`
 **Deadline:** Tanggal 9, pukul 23.59 sesuai brief dosen

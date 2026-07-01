@@ -18,7 +18,7 @@
 **Interpretasi:**
 Distribusi `Total` miring ke kanan (right-skewed) — mayoritas transaksi bernilai kecil-menengah ($10–$400), dengan sedikit transaksi besar ($800–$1,042). Ini adalah pola normal untuk data retail.
 
-**Screenshot:** *(Histogram Total dengan bin size 50)*
+*(Visualisasi Histogram Total dibuat secara langsung di Tableau).*
 
 ---
 
@@ -43,7 +43,9 @@ Distribusi `Total` miring ke kanan (right-skewed) — mayoritas transaksi bernil
 **Insight:**
 Mayoritas pelanggan memberi rating 6-9 (67.5%). Rating rendah (<5) hanya 17.4% — tingkat kepuasan tergolong baik. Tidak ada rating di bawah 4.0.
 
-**Screenshot:** *(Histogram Rating dengan bin size 1)*
+**Screenshot:**
+
+![Distribusi Rating Pelanggan](assets/Rating-Distribution.png)
 
 ---
 
@@ -57,7 +59,7 @@ Mayoritas pelanggan memberi rating 6-9 (67.5%). Rating rendah (<5) hanya 17.4% �
 **Insight:**
 Mayoritas transaksi membeli 5-7 unit produk. Quantity range: 1-10 unit per transaksi.
 
-**Screenshot:** *(Bar chart distribusi Quantity)*
+*(Visualisasi Distribusi Quantity dibuat secara langsung di Tableau).*
 
 ---
 
@@ -82,7 +84,9 @@ Mayoritas transaksi membeli 5-7 unit produk. Quantity range: 1-10 unit per trans
 **Insight:**
 Naypyitaw unggul dalam **average transaction value** ($337.10 vs $312.35 Yangon vs $319.87 Mandalay). Meskipun volume transaksi paling sedikit, Naypyitaw menghasilkan revenue tertinggi.
 
-**Screenshot:** *(Line chart tren harian per City)*
+**Screenshot:**
+
+![Tren Penjualan Harian per Cabang](assets/Revenue-Trend.png)
 
 ### 2.2. Penjualan per Hari dalam Seminggu
 
@@ -117,7 +121,9 @@ Jam 19:00 (7-8 PM) adalah puncak aktivitas belanja — 113 transaksi dengan reve
 
 **Rekomendasi:** Tambah kasir dan staf di jam 18:30-19:30 untuk mengoptimalkan peak hour. Pertimbangkan promosi "happy hour" di jam sepi (17:00-18:00).
 
-**Screenshot:** *(Bar chart jam sibuk)*
+**Screenshot:**
+
+![Jam Sibuk (Hourly Activity)](assets/Hourly-Activity.png)
 
 ---
 
@@ -147,7 +153,9 @@ Jam 19:00 (7-8 PM) adalah puncak aktivitas belanja — 113 transaksi dengan reve
 **Insight:**
 Kontribusi relatif merata antar kategori (15-17%). Food & beverages unggul tipis. Health & beauty paling rendah — 5 kategori lainnya hampir identik.
 
-**Screenshot:** *(Bar chart Revenue per Product line)*
+**Screenshot:**
+
+![Revenue per Product Line](assets/Product-Performance.png)
 
 ### 3.2. Gross Income per Product Line
 
@@ -189,7 +197,9 @@ Kontribusi relatif merata antar kategori (15-17%). Food & beverages unggul tipis
 **Insight:**
 Food & beverages memiliki rating tertinggi (7.11) — artinya pelanggan paling puas dengan produk ini. Home & lifestyle paling rendah (6.84). Namun, semua kategori masih di atas 6.8 dari skala 10.
 
-**Screenshot:** *(Bar chart rating per Product line dengan reference line)*
+**Screenshot:**
+
+![Rating per Product Line](assets/Product-Performance.png)
 
 ### 3.4. Preferensi Produk per Cabang
 
@@ -218,7 +228,9 @@ Food & beverages memiliki rating tertinggi (7.11) — artinya pelanggan paling p
 
 **Rekomendasi:** Strategi promosi harus berbeda per cabang — Naypyitaw fokus F&B, Yangon fokus Home & lifestyle.
 
-**Screenshot:** *(Heatmap produk per cabang)*
+**Screenshot:**
+
+![Heatmap Produk per Cabang](assets/City-Comparison.png)
 
 ---
 
@@ -245,7 +257,9 @@ Food & beverages memiliki rating tertinggi (7.11) — artinya pelanggan paling p
 **Insight:**
 Member menghabiskan **$9.67 lebih banyak** per transaksi dibanding pelanggan normal ($327.79 vs $318.12), atau sekitar +3% lebih tinggi. Namun, rating member sedikit **lebih rendah** (6.94 vs 7.01) — mungkin karena ekspektasi yang lebih tinggi.
 
-**Screenshot:** *(Bar chart Member vs Normal total revenue)*
+**Screenshot:**
+
+![Perbandingan Revenue Member vs Normal](assets/Customer-Analysis.png)
 
 ### 4.2. Preferensi Produk: Member vs Normal
 
@@ -274,7 +288,9 @@ Member menghabiskan **$9.67 lebih banyak** per transaksi dibanding pelanggan nor
 **Insight:**
 Cash dan Ewallet hampir sama populer. Credit card paling sedikit digunakan. Pelanggan Credit card memberi rating sedikit lebih tinggi (7.00).
 
-**Screenshot:** *(Bar chart preferensi pembayaran)*
+**Screenshot:**
+
+![Preferensi Metode Pembayaran](assets/Payment-Analysis.png)
 
 ### 4.4. Metode Pembayaran per Tipe Pelanggan
 
@@ -303,7 +319,7 @@ Cash dan Ewallet hampir sama populer. Credit card paling sedikit digunakan. Pela
 **Insight:**
 Tidak ada korelasi kuat antara nilai transaksi dengan rating. Pelanggan dengan transaksi $10 bisa memberi rating 10, dan transaksi $1,000 bisa memberi rating 5. Kepuasan tidak tergantung pada nominal belanja.
 
-**Screenshot:** *(Scatter plot Total vs Rating dengan trend line)*
+*(Analisis korelasi Total vs Rating dilakukan secara interaktif di Tableau).*
 
 ### 5.2. Scatter Plot: Quantity vs Rating
 
@@ -371,7 +387,9 @@ Buat semua calculated field berikut di Tableau sebelum membuat visualisasi:
 3. Masukkan nama dan formula
 4. Klik **OK**
 
-**Screenshot:** *(Tampilkan daftar Calculated Fields di panel Data)*
+**Screenshot:**
+
+![Daftar Calculated Fields di Panel Data](assets/Data-Source.png)
 
 ---
 
@@ -396,21 +414,21 @@ Buat semua calculated field berikut di Tableau sebelum membuat visualisasi:
 
 | # | Nama Sheet | Tipe Chart | Sub-Pertanyaan | Screenshot |
 |:-:|-----------|:----------:|:--------------:|:----------:|
-| 1 | Histogram Total | Histogram | EDA | [ ] |
-| 2 | Histogram Rating | Histogram | EDA | [ ] |
-| 3 | Tren Penjualan Harian | Line Chart | Q1 | [ ] |
-| 4 | Penjualan per Hari | Bar Chart | Q1 | [ ] |
-| 5 | Jam Sibuk | Bar Chart | Q1 | [ ] |
-| 6 | Revenue per Product | Bar Chart | Q2 | [ ] |
-| 7 | Gross Income per Product | Bar Chart | Q2 | [ ] |
-| 8 | Rating per Product | Bar Chart | Q2 | [ ] |
-| 9 | Produk per Cabang (Heatmap) | Heatmap | Q2 | [ ] |
-| 10 | Member vs Normal | Bar Chart | Q3 | [ ] |
-| 11 | Preferensi Pembayaran | Bar Chart | Q3 | [ ] |
-| 12 | Total vs Rating (Scatter) | Scatter Plot | Q4 | [ ] |
-| 13 | Rating per Jam | Bar Chart | Q4 | [ ] |
-| 14 | Gender Analysis | Bar Chart | Q5 | [ ] |
-| 15 | Payment by Gender | Heatmap/Bar | Q5 | [ ] |
+| 1 | Histogram Total | Histogram | EDA | [X] |
+| 2 | Histogram Rating | Histogram | EDA | [X] |
+| 3 | Tren Penjualan Harian | Line Chart | Q1 | [X] |
+| 4 | Penjualan per Hari | Bar Chart | Q1 | [X] |
+| 5 | Jam Sibuk | Bar Chart | Q1 | [X] |
+| 6 | Revenue per Product | Bar Chart | Q2 | [X] |
+| 7 | Gross Income per Product | Bar Chart | Q2 | [X] |
+| 8 | Rating per Product | Bar Chart | Q2 | [X] |
+| 9 | Produk per Cabang (Heatmap) | Heatmap | Q2 | [X] |
+| 10 | Member vs Normal | Bar Chart | Q3 | [X] |
+| 11 | Preferensi Pembayaran | Bar Chart | Q3 | [X] |
+| 12 | Total vs Rating (Scatter) | Scatter Plot | Q4 | [X] |
+| 13 | Rating per Jam | Bar Chart | Q4 | [X] |
+| 14 | Gender Analysis | Bar Chart | Q5 | [X] |
+| 15 | Payment by Gender | Heatmap/Bar | Q5 | [X] |
 
 ---
 

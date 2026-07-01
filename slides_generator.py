@@ -26,7 +26,7 @@ def main() -> None:
             "# Slide Presentasi UAS Big Data Science",
             "## Supermarket Sales Analysis",
             "",
-            "**Anggota Kelompok:** [Nama 1 - NIM], [Nama 2 - NIM], [Nama 3 - NIM]",
+            "**Anggota Kelompok:** Mu'adz Hudzaifah (24903460014), Alhaq Sabilil Izati (24903460012), Arfan Ghifari",
             "**Tools:** Tableau Desktop",
             "",
             "---",

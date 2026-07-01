@@ -62,7 +62,9 @@ Membersihkan dan memvalidasi dataset supermarket_sales.csv agar siap untuk tahap
 1. Di Data Source, klik dropdown pada kolom `Date`
 2. Pilih **Change Data Type → Date**
 3. Tableau akan otomatis mem-parse format `M/D/YYYY`
-4. **Screenshot:** *(Abadikan momen ini — klik kanan Date → Change Data Type → Date)*
+4. **Screenshot:**
+
+![Konversi Tipe Data Date](assets/Data-Source.png)
 
 **Time (String → Time):**
 1. Di Data Source, klik dropdown pada kolom `Time`
@@ -71,7 +73,9 @@ Membersihkan dan memvalidasi dataset supermarket_sales.csv agar siap untuk tahap
    ```
    Hour = INT(LEFT([Time], 2))
    ```
-4. **Screenshot:** *(Abadikan momen ini)*
+4. **Screenshot:**
+
+![Konversi Tipe Data Time/Hour](assets/Data-Source.png)
 
 ---
 
@@ -92,7 +96,9 @@ Membersihkan dan memvalidasi dataset supermarket_sales.csv agar siap untuk tahap
 
 **Hasil: TIDAK ADA MISSING VALUES.**
 Semua 17 kolom memiliki 1.000 nilai valid dari 1.000 baris.
-**Screenshot:** *(Tampilkan worksheet dengan count per field)*
+**Screenshot:**
+
+![Pengecekan Missing Values](assets/Data-Quality.png)
 
 ---
 
@@ -107,7 +113,9 @@ Semua 17 kolom memiliki 1.000 nilai valid dari 1.000 baris.
 
 **Hasil: TIDAK ADA DUPLIKASI.**
 Setiap Invoice ID unik — 1.000 nilai unik.
-**Screenshot:** *(Tampilkan baris dengan COUNT dan COUNTD)*
+**Screenshot:**
+
+![Pengecekan Duplikasi data (COUNT vs COUNTD)](assets/Data-Quality.png)
 
 ---
 
@@ -130,7 +138,9 @@ Setiap Invoice ID unik — 1.000 nilai unik.
 | Product line | 6 kategori (capitalized consistently) | [OK] |
 | Payment | Cash, Ewallet, Credit card | [OK] |
 
-**Screenshot:** *(Tampilkan Data Source dengan kolom kategorikal yang sudah disortir)*
+**Screenshot:**
+
+![Konsistensi Format Kategorikal](assets/Data-Source.png)
 
 ---
 
@@ -159,7 +169,11 @@ Setiap Invoice ID unik — 1.000 nilai unik.
 - Tidak ada outlier ekstrem
 - Sebaran normal
 
-**Screenshot:** *(Tampilkan Box Plot Total per City dan Rating per Product line)*
+**Screenshot:**
+
+![Box Plot Total per City](assets/Box-Plot-Total.png)
+
+![Box Plot Rating per Product Line](assets/Box-Plot-Rating.png)
 
 ---
 
@@ -211,14 +225,14 @@ Setiap Invoice ID unik — 1.000 nilai unik.
 
 | # | Screenshot | Sudah? |
 |:-:|-----------|:------:|
-| 1 | Data Source — tipe data Date diubah ke Date | [ ] |
-| 2 | Data Source — tipe data Time atau Hour CF | [ ] |
-| 3 | Missing values check — 0 null untuk semua field | [ ] |
-| 4 | Duplicate check — COUNT vs COUNTD = 1.000 | [ ] |
-| 5 | Inkonsistensi format — sortir kategorikal | [ ] |
-| 6 | Box Plot Total per City | [ ] |
-| 7 | Box Plot Rating per Product line | [ ] |
-| 8 | Calculated Fields — daftar CF yang dibuat | [ ] |
+| 1 | Data Source — tipe data Date diubah ke Date | [X] |
+| 2 | Data Source — tipe data Time atau Hour CF | [X] |
+| 3 | Missing values check — 0 null untuk semua field | [X] |
+| 4 | Duplicate check — COUNT vs COUNTD = 1.000 | [X] |
+| 5 | Inkonsistensi format — sortir kategorikal | [X] |
+| 6 | Box Plot Total per City | [X] |
+| 7 | Box Plot Rating per Product line | [X] |
+| 8 | Calculated Fields — daftar CF yang dibuat | [X] |
 
 ---
 

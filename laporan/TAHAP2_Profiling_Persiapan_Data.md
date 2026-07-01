@@ -88,7 +88,9 @@
 3. Pilih **Date**
 4. Pastikan Tableau membaca format tanggal sebagai **M/D/YYYY**
 
-**Screenshot:** *(Screenshot saat konfigurasi Date di Tableau akan ditambahkan saat praktik)*
+**Screenshot:**
+
+![Konfigurasi Tipe Data dan Kolom di Tableau](assets/Data-Source.png)
 
 ### 4.2. Konversi Time (String → Time)
 
