@@ -1,0 +1,4 @@
+Sumber Dataset: Supermarket Sales
+File: supermarket_sales.csv
+Deskripsi: Dataset transaksi penjualan supermarket fiksi untuk 3 cabang (Yangon, Mandalay, Naypyitaw) selama periode Januari-Maret 2019.
+Jumlah Dataset: Hanya terdapat 1 dataset utama (supermarket_sales.csv) yang digunakan untuk analisis proyek ini.
