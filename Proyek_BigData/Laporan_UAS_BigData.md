@@ -217,7 +217,7 @@ Dataset yang kita gunakan sudah berada pada tahap **penyimpanan (storage)**, dan
 
 **Screenshot:**
 
-![Konfigurasi Tipe Data dan Kolom di Tableau](assets/Data-Source.png)
+![Konfigurasi Tipe Data dan Kolom di Tableau](assets/Data-Source.jpg)
 
 ### 4.2. Konversi Time (String → Time)
 
@@ -358,7 +358,7 @@ Membersihkan dan memvalidasi dataset supermarket_sales.csv agar siap untuk tahap
 3. Tableau akan otomatis mem-parse format `M/D/YYYY`
 4. **Screenshot:**
 
-![Konversi Tipe Data Date](assets/Data-Source.png)
+![Konversi Tipe Data Date](assets/Data-Source.jpg)
 
 **Time (String → Time):**
 1. Di Data Source, klik dropdown pada kolom `Time`
@@ -369,7 +369,7 @@ Membersihkan dan memvalidasi dataset supermarket_sales.csv agar siap untuk tahap
    ```
 4. **Screenshot:**
 
-![Konversi Tipe Data Time/Hour](assets/Data-Source.png)
+![Konversi Tipe Data Time/Hour](assets/Data-Source.jpg)
 
 ---
 
@@ -392,7 +392,7 @@ Membersihkan dan memvalidasi dataset supermarket_sales.csv agar siap untuk tahap
 Semua 17 kolom memiliki 1.000 nilai valid dari 1.000 baris.
 **Screenshot:**
 
-![Pengecekan Missing Values](assets/Data-Quality.png)
+![Pengecekan Missing Values](assets/Data-Quality.jpg)
 
 ---
 
@@ -409,7 +409,7 @@ Semua 17 kolom memiliki 1.000 nilai valid dari 1.000 baris.
 Setiap Invoice ID unik — 1.000 nilai unik.
 **Screenshot:**
 
-![Pengecekan Duplikasi data (COUNT vs COUNTD)](assets/Data-Quality.png)
+![Pengecekan Duplikasi data (COUNT vs COUNTD)](assets/Data-Quality.jpg)
 
 ---
 
@@ -434,7 +434,7 @@ Setiap Invoice ID unik — 1.000 nilai unik.
 
 **Screenshot:**
 
-![Konsistensi Format Kategorikal](assets/Data-Source.png)
+![Konsistensi Format Kategorikal](assets/Data-Source.jpg)
 
 ---
 
@@ -465,9 +465,9 @@ Setiap Invoice ID unik — 1.000 nilai unik.
 
 **Screenshot:**
 
-![Box Plot Total per City](assets/Box-Plot-Total.png)
+![Box Plot Total per City](assets/Box-Plot-Total.jpg)
 
-![Box Plot Rating per Product Line](assets/Box-Plot-Rating.png)
+![Box Plot Rating per Product Line](assets/Box-Plot-Rating.jpg)
 
 ---
 
@@ -581,7 +581,7 @@ Mayoritas pelanggan memberi rating 6-9 (67.5%). Rating rendah (<5) hanya 17.4% �
 
 **Screenshot:**
 
-![Distribusi Rating Pelanggan](assets/Rating-Distribution.png)
+![Distribusi Rating Pelanggan](assets/Rating-Distribution.jpg)
 
 ---
 
@@ -622,7 +622,7 @@ Naypyitaw unggul dalam **average transaction value** ($337.10 vs $312.35 Yangon 
 
 **Screenshot:**
 
-![Tren Penjualan Harian per Cabang](assets/Revenue-Trend.png)
+![Tren Penjualan Harian per Cabang](assets/Revenue-Trend.jpg)
 
 ### 2.2. Penjualan per Hari dalam Seminggu
 
@@ -659,7 +659,7 @@ Jam 19:00 (7-8 PM) adalah puncak aktivitas belanja — 113 transaksi dengan reve
 
 **Screenshot:**
 
-![Jam Sibuk (Hourly Activity)](assets/Hourly-Activity.png)
+![Jam Sibuk (Hourly Activity)](assets/Hourly-Activity.jpg)
 
 ---
 
@@ -691,7 +691,7 @@ Kontribusi relatif merata antar kategori (15-17%). Food & beverages unggul tipis
 
 **Screenshot:**
 
-![Revenue per Product Line](assets/Product-Performance.png)
+![Revenue per Product Line](assets/Product-Performance.jpg)
 
 ### 3.2. Gross Income per Product Line
 
@@ -735,7 +735,7 @@ Food & beverages memiliki rating tertinggi (7.11) — artinya pelanggan paling p
 
 **Screenshot:**
 
-![Rating per Product Line](assets/Product-Performance.png)
+![Rating per Product Line](assets/Product-Performance.jpg)
 
 ### 3.4. Preferensi Produk per Cabang
 
@@ -766,7 +766,7 @@ Food & beverages memiliki rating tertinggi (7.11) — artinya pelanggan paling p
 
 **Screenshot:**
 
-![Heatmap Produk per Cabang](assets/City-Comparison.png)
+![Heatmap Produk per Cabang](assets/City-Comparison.jpg)
 
 ---
 
@@ -795,7 +795,7 @@ Member menghabiskan **$9.67 lebih banyak** per transaksi dibanding pelanggan nor
 
 **Screenshot:**
 
-![Perbandingan Revenue Member vs Normal](assets/Customer-Analysis.png)
+![Perbandingan Revenue Member vs Normal](assets/Customer-Analysis.jpg)
 
 ### 4.2. Preferensi Produk: Member vs Normal
 
@@ -826,7 +826,7 @@ Cash dan Ewallet hampir sama populer. Credit card paling sedikit digunakan. Pela
 
 **Screenshot:**
 
-![Preferensi Metode Pembayaran](assets/Payment-Analysis.png)
+![Preferensi Metode Pembayaran](assets/Payment-Analysis.jpg)
 
 ### 4.4. Metode Pembayaran per Tipe Pelanggan
 
@@ -925,7 +925,7 @@ Buat semua calculated field berikut di Tableau sebelum membuat visualisasi:
 
 **Screenshot:**
 
-![Daftar Calculated Fields di Panel Data](assets/Data-Source.png)
+![Daftar Calculated Fields di Panel Data](assets/Data-Source.jpg)
 
 ---
 
@@ -1242,15 +1242,15 @@ luaran/Supermarket_Sales_Dashboard.twbx
 
 | # | Screenshot | Sudah? |
 |:-:|-----------|:------:|
-| 1 | Tampilan Data Source — semua tipe data sudah benar | [X] (assets/Data-Source.png) |
-| 2 | Daftar Calculated Fields di panel Data | [X] (assets/Data-Source.png) |
-| 3 | Quick Filter: City (drop-down) | [X] (assets/Revenue-Trend.png) |
-| 4 | Quick Filter: Product line (drop-down) | [X] (assets/Product-Performance.png) |
-| 5 | Filter Action: Konfigurasi pop-up | [X] (assets/Revenue-Trend.png) |
-| 6 | Parameter: Top N Products — show parameter control | [X] (assets/Product-Performance.png) |
-| 7 | Layout dashboard — tampilan penuh | [X] (assets/City-Comparison.png) |
-| 8 | Dashboard saat difilter — salah satu cabang | [X] (assets/City-Comparison.png) |
-| 9 | Dashboard saat parameter diubah — Top 3 | [X] (assets/Product-Performance.png) |
+| 1 | Tampilan Data Source — semua tipe data sudah benar | [X] (assets/Data-Source.jpg) |
+| 2 | Daftar Calculated Fields di panel Data | [X] (assets/Data-Source.jpg) |
+| 3 | Quick Filter: City (drop-down) | [X] (assets/Revenue-Trend.jpg) |
+| 4 | Quick Filter: Product line (drop-down) | [X] (assets/Product-Performance.jpg) |
+| 5 | Filter Action: Konfigurasi pop-up | [X] (assets/Revenue-Trend.jpg) |
+| 6 | Parameter: Top N Products — show parameter control | [X] (assets/Product-Performance.jpg) |
+| 7 | Layout dashboard — tampilan penuh | [X] (assets/City-Comparison.jpg) |
+| 8 | Dashboard saat difilter — salah satu cabang | [X] (assets/City-Comparison.jpg) |
+| 9 | Dashboard saat parameter diubah — Top 3 | [X] (assets/Product-Performance.jpg) |
 | 10 | Export .twbx — file di file explorer | [X] |
 
 ---
