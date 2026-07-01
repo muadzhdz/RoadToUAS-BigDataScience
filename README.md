@@ -39,6 +39,100 @@ Berikut adalah berkas pengumpulan akhir yang terdapat pada branch hasil:
 
 ---
 
+### Penjelasan Visual Hasil Screenshot (Assets)
+
+Berikut adalah penjelasan detail, lengkap, dan terstruktur untuk masing-masing berkas screenshot hasil visualisasi Tableau yang terdapat di folder assets:
+
+#### 1. Koneksi Sumber Data (Data-Source.png)
+
+![Koneksi Sumber Data](Proyek_BigData/assets/Data-Source.png)
+
+*   **Masalah/Konteks**: Memastikan file dataset mentah supermarket_sales.csv terhubung dengan benar di Tableau Desktop dan memetakan tipe data yang tepat. Masalah utama sebelum visualisasi adalah memastikan kolom Date dibaca sebagai tanggal, bukan sebagai string.
+*   **Hasil**: Menampilkan visualisasi tab Data Source di Tableau Desktop yang menampilkan preview 1.000 baris transaksi dengan 17 kolom. Seluruh pemetaan tipe data (seperti String untuk ID, Date untuk Tanggal, dan Decimal untuk Angka) telah disesuaikan secara presisi.
+*   **Pengertian**: Menunjukkan kesiapan teknis dataset untuk diolah lebih lanjut. Pengaturan data source ini menjadi basis utama bagi Tableau dalam mengonstruksi calculated fields dan visualisasi grafik secara akurat.
+
+#### 2. Pemeriksaan Kualitas Data (Data-Quality.png)
+
+![Pemeriksaan Kualitas Data](Proyek_BigData/assets/Data-Quality.png)
+
+*   **Masalah/Konteks**: Membuktikan kebersihan dan kelengkapan data (data profiling) secara visual. Masalah yang sering terjadi adalah adanya baris data yang kosong (null) atau duplikat (Invoice ID ganda) yang dapat mendistorsi hasil analisis.
+*   **Hasil**: Bar chart yang menampilkan visualisasi jumlah Invoice ID (Count) per kota secara merata dan konstan (Yangon 340 transaksi, Mandalay 332 transaksi, Naypyitaw 328 transaksi, dengan total tepat 1.000 transaksi).
+*   **Pengertian**: Grafik ini membuktikan bahwa tidak ada data kosong (0 missing values) dan tidak ada baris ganda (0 duplikasi data) pada kolom kunci primer. Data terbukti berkualitas tinggi dan valid untuk dianalisis.
+
+#### 3. Deteksi Outlier Nilai Belanja (Box-Plot-Total.png)
+
+![Deteksi Outlier Nilai Belanja](Proyek_BigData/assets/Box-Plot-Total.png)
+
+*   **Masalah/Konteks**: Tahap 3 Pembersihan Data menuntut analisis pencilan (outlier) pada variabel nilai transaksi (Total) per kota agar nilai rata-rata tidak bias akibat adanya transaksi bernilai ekstrem.
+*   **Hasil**: Box plot sebaran nilai transaksi Total per kota secara disagregat menggunakan mark Circle untuk memetakan setiap transaksi secara individual.
+*   **Pengertian**: Menampilkan batas bawah transaksi ($10.68), batas atas ($1,042.65), serta rentang IQR (Interquartile Range) untuk masing-masing kota. Hasil menunjukkan sebaran data yang sehat tanpa adanya outlier ekstrem yang berdiri jauh di luar batas whisker atas, sehingga tidak ada data yang perlu dibuang.
+
+#### 4. Deteksi Outlier Kepuasan Pelanggan (Box-Plot-Rating.png)
+
+![Deteksi Outlier Kepuasan Pelanggan](Proyek_BigData/assets/Box-Plot-Rating.png)
+
+*   **Masalah/Konteks**: Mengidentifikasi apakah ada nilai anomali pada rating kepuasan yang diberikan pelanggan (Rating) per kategori produk yang berada di luar rentang wajar (skala 1-10).
+*   **Hasil**: Box plot sebaran nilai skor kepuasan pelanggan (Rating) untuk setiap lini produk (Product Line) secara disagregat.
+*   **Pengertian**: Menunjukkan bahwa skor rating yang diberikan pelanggan tersebar secara normal dalam batas wajar antara 4.0 hingga 10.0. Tidak ada rating bernilai minus atau lebih dari 10.0, yang membuktikan data rating konsisten dan siap digunakan untuk analisis kepuasan.
+
+#### 5. Tren Pendapatan Berkala (Revenue-Trend.png)
+
+![Tren Pendapatan Berkala](Proyek_BigData/assets/Revenue-Trend.png)
+
+*   **Masalah/Konteks**: Menganalisis bagaimana kinerja pendapatan kotor (Total) berfluktuasi dari waktu ke waktu (Velocity) untuk mendeteksi pola musiman bulanan atau mingguan.
+*   **Hasil**: Line chart pergerakan akumulasi nilai transaksi harian dari Januari hingga Maret 2019 yang dikelompokkan berdasarkan kota.
+*   **Pengertian**: Pendapatan menunjukkan pola fluktuatif yang berulang secara berkala. Analisis tren mendeteksi lonjakan penjualan yang konsisten setiap akhir pekan (Jumat-Sabtu), membantu manajemen dalam mempersiapkan promosi mingguan dan alokasi kasir tambahan pada hari-hari puncak tersebut.
+
+#### 6. Kinerja Lini Produk (Product-Performance.png)
+
+![Kinerja Lini Produk](Proyek_BigData/assets/Product-Performance.png)
+
+*   **Masalah/Konteks**: Mengidentifikasi produk mana yang memberikan kontribusi pendapatan terbesar (Top Performer) dan terendah guna merencanakan strategi inventori pergudangan.
+*   **Hasil**: Bar chart komparatif total pendapatan kotor (Total) berdasarkan lini produk (Product Line) dan kota.
+*   **Pengertian**: Lini produk Food and beverages memimpin penjualan dengan total kontribusi sebesar $56,144.84, disusul oleh Fashion accessories. Sebaliknya, Fashion accessories sangat dominan di Naypyitaw namun lemah di Mandalay. Informasi ini mempermudah keputusan distribusi stok barang agar sesuai minat pasar masing-masing cabang.
+
+#### 7. Profil Belanja Berdasarkan Jenis Pelanggan (Customer-Analysis.png)
+
+![Profil Belanja Berdasarkan Jenis Pelanggan](Proyek_BigData/assets/Customer-Analysis.png)
+
+*   **Masalah/Konteks**: Membandingkan kontribusi nilai belanja antara pelanggan yang terdaftar dalam loyalitas (Member) dengan pelanggan umum (Normal) untuk mengukur efektivitas program kartu keanggotaan.
+*   **Hasil**: Bar chart komparatif pendapatan kotor antara Member vs Normal untuk setiap kategori lini produk.
+*   **Pengertian**: Pelanggan Member mencatatkan rata-rata nilai belanja (AOV) sebesar $327.79, lebih tinggi dibanding pelanggan Normal yang sebesar $318.12. Hal ini menunjukkan program keanggotaan sukses mendorong nilai transaksi per kunjungan, sehingga direkomendasikan untuk meningkatkan promosi pendaftaran Member baru.
+
+#### 8. Jam Aktivitas Puncak Transaksi (Hourly-Activity.png)
+
+![Jam Aktivitas Puncak Transaksi](Proyek_BigData/assets/Hourly-Activity.png)
+
+*   **Masalah/Konteks**: Menentukan jam operasional paling sibuk agar manajemen dapat merancang jadwal kerja kasir (shift scheduling) secara optimal guna menghindari antrean panjang pelanggan.
+*   **Hasil**: Bar chart jumlah transaksi (Invoice ID) berdasarkan jam waktu transaksi (10:00 s.d. 20:00).
+*   **Pengertian**: Jam puncak transaksi terjadi pada pukul 19:00 (113 transaksi) dan pukul 13:00 (111 transaksi). Manajemen kasir harus menempatkan jumlah staf kasir maksimal pada jam-jam sibuk tersebut dan menjadwalkan istirahat staf di luar jam kritis ini (misal pukul 15:00 - 16:00).
+
+#### 9. Evaluasi Kinerja Antar Cabang Kota (City-Comparison.png)
+
+![Evaluasi Kinerja Antar Cabang Kota](Proyek_BigData/assets/City-Comparison.png)
+
+*   **Masalah/Konteks**: Manajemen membutuhkan perbandingan performa menyeluruh antar cabang kota (Yangon, Mandalay, Naypyitaw) baik dari segi total pendapatan maupun rata-rata rating kepuasan konsumen.
+*   **Hasil**: Bar chart gabungan yang menampilkan total pendapatan kotor (Total) dan rata-rata rating kepuasan pelanggan untuk setiap kota.
+*   **Pengertian**: Cabang C (Naypyitaw) mencatatkan pendapatan tertinggi ($110,568.71) dengan rata-rata rating kepuasan pelanggan yang unggul (7.07 / 10). Cabang Naypyitaw merupakan cabang paling efisien karena menghasilkan pendapatan terbesar meskipun jumlah transaksi harian sedikit lebih rendah dibanding Yangon.
+
+#### 10. Distribusi Skor Kepuasan Pelanggan (Rating-Distribution.png)
+
+![Distribusi Skor Kepuasan Pelanggan](Proyek_BigData/assets/Rating-Distribution.png)
+
+*   **Masalah/Konteks**: Memahami penyebaran nilai kepuasan pelanggan secara makro guna mengevaluasi kualitas pelayanan supermarket secara keseluruhan.
+*   **Hasil**: Bar chart frekuensi jumlah transaksi berdasarkan nilai rating kepuasan pelanggan (skala 4.0 s.d. 10.0).
+*   **Pengertian**: Data rating berdistribusi secara normal dengan konsentrasi terbesar pada rentang skor 6.0 s.d. 8.0. Nilai rata-rata kepuasan berada pada angka 6.97. Hal ini menunjukkan performa pelayanan yang cukup baik, namun manajemen perlu melakukan pelatihan pelayanan kasir agar distribusi skor bergeser ke arah kanan (rating 9.0 - 10.0).
+
+#### 11. Pangsa Pasar Metode Pembayaran (Payment-Analysis.png)
+
+![Pangsa Pasar Metode Pembayaran](Proyek_BigData/assets/Payment-Analysis.png)
+
+*   **Masalah/Konteks**: Mengidentifikasi metode pembayaran yang paling disukai oleh pelanggan untuk menjalin kerjasama promosi diskon cashback dengan merchant penyedia pembayaran.
+*   **Hasil**: Bar chart total nilai transaksi belanja berdasarkan 3 metode pembayaran (Ewallet, Cash, Credit Card) per kota.
+*   **Pengertian**: Ketiga opsi pembayaran memiliki pangsa pasar yang hampir setara (sekitar 33% untuk masing-masing metode). Cash mendominasi transaksi di kota Naypyitaw, sedangkan Ewallet memimpin tipis di kota Yangon. Supermarket wajib mempertahankan kestabilan infrastruktur kasir untuk memproses ketiga metode pembayaran tersebut tanpa hambatan teknis.
+
+---
+
 ### Petunjuk Penggunaan
 
 1.  **Membuka Dashboard**: Unduh file Supermarket_Sales_Dashboard.twbx di dalam folder Proyek_BigData/, lalu klik dua kali untuk membukanya menggunakan Tableau Desktop.
