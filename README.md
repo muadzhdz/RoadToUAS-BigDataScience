@@ -16,11 +16,10 @@ Proyek ini diselesaikan secara eksperimental menggunakan pendekatan Alur Kerja A
 ---
 
 ### Teknologi AI yang Digunakan (AI Tech Stack)
-Eksperimen penyusunan proyek ini memanfaatkan kolaborasi beberapa model dan peralatan AI mutakhir:
-*   **Codex**: Digunakan untuk pemahaman logika pemrograman dan validasi dataset berbasis kode.
-*   **OpenCode**: Digunakan untuk pemetaan calculated fields dan debugging awal skema database.
-*   **Kiro-CLI**: Asisten AI berbasis terminal yang mengeksekusi profil data awal, pembersihan data, serta membangun draf pertama workbook Tableau (.twb).
-*   **Antigravity CLI**: Agen AI tingkat lanjut yang melakukan pembersihan total visualisasi, perbaikan kesalahan validasi skema XML Tableau 2026.2, pemecahan masalah Box Plot Outlier Tahap 3, serta kompilasi akhir seluruh luaran.
+*   **Codex**
+*   **OpenCode**
+*   **Kiro-CLI**
+*   **Antigravity CLI**
 
 ---
 
@@ -30,12 +29,13 @@ Berikut adalah berkas pengumpulan akhir yang terdapat pada branch hasil:
 
 *   **Proyek_BigData/**: Folder utama pengumpulan proyek analisis:
     *   **Supermarket_Sales_Dashboard.twbx**: Berkas Tableau Packaged Workbook utuh. Berisi data ekstrak retail supermarket, 10 worksheet visualisasi yang rapi (termasuk visualisasi Box Plot Outlier untuk melengkapi Tahap 3), parameter Top N Products, filter action interaktif berdasarkan kota, dan siap dibuka secara portabel di komputer dosen.
-    *   **Laporan_UAS_BigData.md**: Laporan akademis komprehensif berisi Tahap 1 sampai Tahap 6 sesuai panduan UAS, lengkap dengan analisis statistik deskriptif dan visualisasi data.
-    *   **Slide_UAS_BigData.md**: Ringkasan presentasi proyek UAS sebanyak 15 slide yang siap dipindahkan ke PowerPoint atau Canva.
+    *   **Workbook_Tableau.md**: Workbook teknis langkah demi langkah analisis menggunakan Tableau — dari koneksi data, profiling, cleaning, EDA, hingga pembuatan dashboard.
+    *   **Slide_UAS_BigData.md**: Presentasi siap-pakai format Marp (VS Code + Marp extension) mencakup 15+ slide temuan utama, visualisasi, dashboard, dan rekomendasi.
     *   **assets/**: Kumpulan 11 screenshot penting yang merekam visualisasi Tableau dan pembuktian pembersihan data (tidak ada data kosong, tidak ada duplikasi kunci primer, serta visualisasi box plot sebaran data).
 *   **dataset/**: Menyimpan berkas data pendukung:
     *   **supermarket_sales.csv**: File dataset transaksi penjualan supermarket.
     *   **sumber_dataset.txt**: Penjelasan ringkas metadata dan keaslian sumber dataset supermarket.
+*   **auto-laporan/**: Sistem otomatisasi cetak laporan akademik ke PDF. Berisi seluruh pipeline konversi Markdown → PDF via **Pandoc + LaTeX (pdflatex)**.
 
 ---
 
@@ -133,7 +133,27 @@ Berikut adalah penjelasan detail, lengkap, dan terstruktur untuk masing-masing b
 
 ---
 
-### Petunjuk Penggunaan
+### ⚡ Automated Report Generation
 
-1.  **Membuka Dashboard**: Unduh file Supermarket_Sales_Dashboard.twbx di dalam folder Proyek_BigData/, lalu klik dua kali untuk membukanya menggunakan Tableau Desktop.
-2.  **Membaca Laporan**: Buka file Laporan_UAS_BigData.md menggunakan editor markdown pilihan Anda (seperti VS Code atau Obsidian) untuk membaca versi terstruktur dengan gambar tersemat. Anda juga dapat mengekspor file ini ke format PDF atau DOCX menggunakan Word.
+Laporan akademik ini dicetak secara otomatis menggunakan pipeline **Pandoc + LaTeX (pdflatex)** yang dikemas dalam folder `auto-laporan/`. Seluruh proses — dari Markdown ke PDF siap-kumpul — dieksekusi dengan satu perintah bash.
+
+**Pipeline:**
+```
+auto-laporan/
+├── Laporan_Akademik.md    ← Naskah akademik BAB 1–5 (Markdown)
+├── cover.md               ← Halaman sampul + Kata Pengantar (LaTeX raw)
+├── template.latex          ← Template LaTeX (TOC, header/footer, styling)
+├── logo-boash.jpg          ← Logo institusi
+└── build.sh               ← ⚡ Satu perintah: markdown → PDF
+```
+
+Eksekusi:
+```bash
+cd auto-laporan && ./build.sh
+# Output: Laporan_UAS_BigData.pdf
+```
+
+Sistem ini merupakan implementasi ringan dari **[laporan-generator](https://github.com/muadzhdz/laporan-generator.git)** — sebuah proyek open-source untuk mencetak laporan akademik dari Markdown ke PDF dengan cepat, konsisten, dan rapi.
+
+**Call to Action:**\
+Jika kalian butuh cetak laporan tugas akhir, skripsi, atau makalah dengan cepat dan rapi tanpa ribet, fork/star repo di atas dan gaskeun! 🌟

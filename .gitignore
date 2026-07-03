@@ -19,3 +19,6 @@ venv/
 
 # Local screenshots from Tableau/desktop work
 screenshots/
+
+# Local web dashboard prototype
+web-dashboard/

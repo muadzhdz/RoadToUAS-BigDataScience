@@ -1,505 +1,393 @@
-# Slide Presentasi UAS Big Data Science
-## Supermarket Sales Analysis
+---
+marp: true
+theme: gaia
+class: lead
+paginate: true
+---
 
-**Anggota Kelompok:** Mu'adz Hudzaifah (24903460014), Alhaq Sabilil Izati (24903460012), Arfan Ghifari (24903460016)
-**Tools:** Tableau Desktop
+<!-- _class: lead -->
+
+# **Analisis Data Penjualan Supermarket Menggunakan Tableau**
+### Laporan UAS Big Data Science
+
+**Disusun oleh:**
+Mu'adz Hudzaifah (24903460014) · Alhaq Sabilil Izati (24903460012) · Arfan Ghifari (24903460016)
+
+**Dosen Pengampu:** Nur Choiriyati, S.Kom., M.T.
+Politeknik Digital Boash Indonesia — TA 2026/2027
 
 ---
 
-Catatan: file ini adalah draft konten presentasi maksimal 15 slide. Masukkan screenshot dashboard final dan rapikan visual di PowerPoint/Canva.
+<!-- _class: default -->
 
----
-﻿# [SLIDES] KONTEN PRESENTASI SIAP PAKAI — 15 SLIDE
-## Supermarket Sales Analysis — Big Data Science
+## **Latar Belakang**
 
----
-
-> **CARA PAKAI:**
-> - Kolom **Slide** = desain visual
-> - Kolom **Narasi** = apa yang lo omongin (hafalin, jangan dibaca)
-> - **Bold** = kata kunci yang harus lo tekankan
-> - ⏱ = estimasi waktu per slide
+- Era Big Data: supermarket menghasilkan ribuan transaksi POS setiap hari — data ini aset strategis
+- Data transaksi mencakup: produk, harga, pembayaran, kepuasan pelanggan
+- **Masalah:** Data jarang dianalisis secara sistematis untuk pengambilan keputusan
+- **Solusi:** Gunakan **Tableau** untuk visualisasi & dashboard interaktif — tanpa coding!
+- Pendekatan **Big Data 5V**: Volume, Velocity, Variety, Veracity, Value
+- Dataset: **Supermarket Sales (Kaggle)** — 1.000 transaksi, 3 cabang, 6 produk
 
 ---
 
-## SLIDE 1 — COVER (⏱ 30 detik)
+## **Dataset Overview**
 
-**Slide:**
-```
-┌─────────────────────────────────────────┐
-│                                         │
-│   [DATA] ANALISIS DATA PENJUALAN           │
-│     SUPERMARKET MENGGUNAKAN TABLEAU     │
-│                                         │
-│   BIG DATA SCIENCE — UAS               │
-│                                         │
-│   Mu'adz Hudzaifah — [NIM]                     │
-│   Alhaq Sabilil Izati — [NIM]                     │
-│   Arfan Ghifari (24903460016) — [NIM]                     │
-│                                         │
-│   Dosen: [Nama Dosen]                  │
-│   [Universitas]                        │
-│   [Tahun Akademik]                     │
-│                                         │
-└─────────────────────────────────────────┘
-```
-
-**Narasi:**
-> "Assalamualaikum wr wb / Selamat pagi. Kami dari kelompok [X] akan mempresentasikan analisis data penjualan supermarket menggunakan Tableau. Dataset yang kami gunakan adalah Supermarket Sales dari Kaggle."
+| Metrik | Nilai |
+|--------|-------|
+| **Sumber** | Kaggle — Aung Pyae Ap |
+| **Jumlah Transaksi** | 1.000 baris, 17 kolom |
+| **Periode** | Januari — Maret 2019 (89 hari) |
+| **Cabang** | 3 (Yangon, Mandalay, Naypyitaw) |
+| **Total Revenue** | **$322,966.75** |
+| **Rata-rata Rating** | **6.97 / 10** |
+| **Pelanggan Member** | 50.1% |
 
 ---
 
-## SLIDE 2 — LATAR BELAKANG (⏱ 1 menit)
+## **Pertanyaan Bisnis**
 
-**Slide:**
-```
-┌─────────────────────────────────────────┐
-│  LATAR BELAKANG                         │
-├─────────────────────────────────────────┤
-│                                         │
-│  [DASHBOARD] Big Data di Industri Ritel         │
-│     - Ribuan transaksi per hari         │
-│     - Data = aset strategis             │
-│                                         │
-│  [LIST] Tujuan Analisis:                   │
-│     Identifikasi faktor penjualan       │
-│     & kepuasan pelanggan               │
-│                                         │
-│  [TOOLS] Tools: Tableau Desktop             │
-│                                         │
-│  [CUSTOMER] Stakeholder:                       │
-│     Manajer Regional, Cabang,          │
-│     Tim Marketing, Tim Keuangan        │
-│                                         │
-└─────────────────────────────────────────┘
-```
+**Utama:** Faktor apa yang paling mempengaruhi total penjualan dan kepuasan pelanggan?
 
-**Narasi:**
-> "Di era Big Data, supermarket menghasilkan ribuan transaksi setiap hari. Sayangnya, data ini sering hanya menjadi arsip. Padahal, data tersebut bisa memberikan insight berharga — seperti produk apa yang paling laris, jam berapa toko paling ramai, dan bagaimana kepuasan pelanggan. Analisis ini bertujuan mengidentifikasi faktor-faktor yang mempengaruhi penjualan dan kepuasan pelanggan menggunakan Tableau."
+**Sub-Pertanyaan:**
+
+1. **Tren Penjualan** — Bagaimana pola harian/mingguan penjualan per cabang?
+2. **Performa Produk** — Kategori apa paling berkontribusi? Ada preferensi per cabang?
+3. **Analisis Pelanggan** — Seberapa efektif program Member vs Normal?
+4. **Analisis Korelasi** — Apakah rating berkorelasi dengan nominal transaksi?
+5. **Demografi** — Metode bayar apa yang dominan tiap segmen?
 
 ---
 
-## SLIDE 3 — DATASET OVERVIEW (⏱ 1 menit)
-
-**Slide:**
-```
-┌─────────────────────────────────────────┐
-│  DATASET SUPERMARKET SALES              │
-├─────────────────────────────────────────┤
-│                                         │
-│  [OUTPUT] Sumber: Kaggle                     │
-│  [DATA] 1.000 transaksi | 17 kolom        │
-│                                         │
-│  ┌──────────────┬─────────────┐        │
-│  │ Metrik       │ Nilai       │        │
-│  ├──────────────┼─────────────┤        │
-│  │ Periode      │ Jan-Mar 2019│        │
-│  │ Revenue      │ $322,966    │        │
-│  │ Cabang       │ 3 (A/B/C)   │        │
-│  │ Produk       │ 6 kategori  │        │
-│  │ Pelanggan    │ 50% Member  │        │
-│  │ Avg Rating   │ 6.97/10     │        │
-│  └──────────────┴─────────────┘        │
-│                                         │
-│  [Ikon: 3 kota, 6 produk, 3 payment]   │
-└─────────────────────────────────────────┘
-```
-
-**Narasi:**
-> "Dataset ini berasal dari Kaggle — mencatat 1.000 transaksi dari 3 cabang supermarket di Yangon, Mandalay, dan Naypyitaw selama Januari hingga Maret 2019. Total revenue mencapai hampir $323.000 dengan rata-rata rating 6.97 dari 10. Dataset mencakup 6 kategori produk dan 3 metode pembayaran. Komposisi pelanggan hampir seimbang — 50% member dan 50% normal."
-
----
-
-## SLIDE 4 — PERTANYAAN BISNIS (⏱ 1 menit)
-
-**Slide:**
-```
-┌─────────────────────────────────────────┐
-│  PERTANYAAN BISNIS                      │
-├─────────────────────────────────────────┤
-│                                         │
-│  [QUESTION] UTAMA:                              │
-│  Faktor apa yang mempengaruhi          │
-│  penjualan & kepuasan pelanggan?       │
-│                                         │
-│  [POINT] SUB-PERTANYAAN:                    │
-│  1. Tren penjualan harian?             │
-│  2. Produk paling berkontribusi?       │
-│  3. Member vs Normal?                  │
-│  4. Korelasi rating dengan transaksi?  │
-│  5. Preferensi metode bayar?           │
-│                                         │
-└─────────────────────────────────────────┘
-```
-
-**Narasi:**
-> "Pertanyaan utama analisis kami adalah: faktor apa yang paling mempengaruhi penjualan dan kepuasan pelanggan? Kami menjabarkannya ke dalam 5 sub-pertanyaan: (1) bagaimana tren penjualan harian? (2) produk apa yang paling berkontribusi? (3) apa bedanya member dan normal? (4) apakah rating berkorelasi dengan nominal transaksi? (5) bagaimana preferensi metode bayar?"
-
----
-
-## SLIDE 5 — TAHAPAN ANALISIS (⏱ 30 detik)
-
-**Slide:**
-```
-┌─────────────────────────────────────────┐
-│  TAHAPAN ANALISIS                       │
-├─────────────────────────────────────────┤
-│                                         │
-│  [SOURCE] Kaggle — Sumber Data               │
-│         ↓                              │
-│  [CHECK] Profiling & Persiapan             │
-│         ↓                              │
-│  [CLEAN] Pembersihan Data (0 missing!)     │
-│         ↓                              │
-│  [DATA] Analisis Eksploratif              │
-│         ↓                              │
-│  [DASHBOARD] Dashboard Interaktif (Tableau)    │
-│         ↓                              │
-│  [NOTES] Sintesis & Rekomendasi            │
-│                                         │
-└─────────────────────────────────────────┘
-```
-
-**Narasi:**
-> "Analisis kami melalui 6 tahap: mulai dari pengumpulan data dari Kaggle, dilanjutkan profiling dan persiapan, pembersihan data, analisis eksploratif di Tableau, pembuatan dashboard interaktif, dan terakhir sintesis rekomendasi."
-
----
-
-## SLIDE 6 — PEMBERSIHAN DATA (⏱ 1 menit)
-
-**Slide:**
-```
-┌─────────────────────────────────────────┐
-│  PEMBERSIHAN DATA                       │
-├─────────────────────────────────────────┤
-│                                         │
-│  [OK] Missing Values: 0 (dari 17 kolom)  │
-│  [OK] Duplikasi: 0 (COUNT=COUNTD=1000)   │
-│  [OK] Inkonsistensi: 0 (format konsisten)│
-│  [OK] Outlier: Tidak ada ekstrem         │
-│                                         │
-│  [PROCESS] Konversi:                          │
-│     Date: String → Date               │
-│     Time: String → Hour (CF)          │
-│                                         │
-│  [INFO] Dataset SUPER BERSIH               │
-│     (tidak perlu cleaning besar)       │
-│                                         │
-└─────────────────────────────────────────┘
-```
-
-**Narasi:**
-> "Untungnya, dataset ini sangat bersih. Kami tidak menemukan missing values, duplikasi, atau inkonsistensi format. Satu-satunya perubahan yang kami lakukan adalah mengkonversi Date dari string ke date, dan mengekstrak jam dari kolom Time. Ini menunjukkan bahwa dataset sudah siap analisis tanpa perlu pembersihan besar-besaran."
-
-**[TIP] TIP:** Tunjukin screenshot Box Plot di slide ini biar lebih meyakinkan.
-
----
-
-## SLIDE 7 — TEMUAN: TREN PENJUALAN (⏱ 1.5 menit)
-
-**Slide:**
-```
-┌─────────────────────────────────────────┐
-│  TEMUAN 1: TREN PENJUALAN               │
-├─────────────────────────────────────────┤
-│                                         │
-│  [LINE CHART: 3 garis warna]           │
-│                                         │
-│  [TOP] NAYPYITAW: $110,568 (REVENUE       │
-│     TERTINGGI! meski 328 transaksi)    │
-│                                         │
-│  [2] Yangon: $106,200 (340 transaksi)   │
-│  [3] Mandalay: $106,197 (332 transaksi) │
-│                                         │
-│  ⭐ AOV Naypyitaw: $337 vs $312        │
-│     (8% lebih tinggi dari Yangon!)     │
-│                                         │
-│  [TIME] PEAK HOUR: 19:00 (113 transaksi)   │
-└─────────────────────────────────────────┘
-```
-
-**Narasi:**
-> "Temuan pertama dan paling menarik: **Naypyitaw** mencatat revenue tertinggi — $110.568 — meskipun jumlah transaksinya paling sedikit! Ini karena Average Order Value di Naypyitaw mencapai **$337**, sementara Yangon hanya $312. Artinya, pelanggan Naypyitaw belanja lebih banyak setiap kali berkunjung. Kami juga menemukan bahwa **jam 19:00** adalah golden hour — 113 transaksi dengan revenue hampir $40.000 dalam satu jam saja."
-
-**[TIP] TIP:** Tunjuk chart dan arahin ke garis Naypyitaw.
-
----
-
-## SLIDE 8 — TEMUAN: PRODUK (⏱ 1.5 menit)
-
-**Slide:**
-```
-┌─────────────────────────────────────────┐
-│  TEMUAN 2: ANALISIS PRODUK              │
-├─────────────────────────────────────────┤
-│                                         │
-│  [BAR CHART: Revenue per Product Line]  │
-│                                         │
-│  [1] Food & Beverages: $56,144 (17.4%)  │
-│  [2] Sports & Travel: $55,122 (17.1%)   │
-│  [3] Electronic Acc: $54,337 (16.8%)    │
-│                                         │
-│  ⭐ RATING TERTINGGI:                  │
-│     F&B = 7.11 [TOP]                      │
-│     Home & Lifestyle = 6.84 (terendah) │
-│                                         │
-│  [HEATMAP: Produk per Cabang]          │
-│  Naypyitaw → F&B ($23,767!)            │
-│  Yangon → Home & Lifestyle ($22,417)   │
-└─────────────────────────────────────────┘
-```
-
-**Narasi:**
-> "Untuk analisis produk, Food & Beverages menjadi juara di dua kategori sekaligus: revenue tertinggi dan rating tertinggi. Ini adalah produk unggulan. Yang menarik, distribusi revenue antar 5 kategori teratas hampir identik — semuanya di kisaran $54.000. Artinya diversifikasi produk berjalan baik. Tapi yang paling menarik adalah **heatmap produk per cabang**: Naypyitaw sangat kuat di F&B, sementara Yangon unggul di Home & Lifestyle. Setiap cabang punya karakteristik berbeda!"
-
-**[TIP] TIP:** Tunjuk heatmap dan kasih contoh spesifik.
-
----
-
-## SLIDE 9 — TEMUAN: PELANGGAN (⏱ 1 menit)
-
-**Slide:**
-```
-┌─────────────────────────────────────────┐
-│  TEMUAN 3: ANALISIS PELANGGAN           │
-├─────────────────────────────────────────┤
-│                                         │
-│  [BAR CHART: Member vs Normal]         │
-│                                         │
-│  [CUSTOMER] MEMBER: $327.79 per transaksi      │
-│     (+3% dari Normal = $318.12)        │
-│                                         │
-│  [PAYMENT] PREFERENSI PEMBAYARAN:             │
-│  Cash   34.4% │ Ewallet 34.5%          │
-│  Credit Card 31.1% │ Rating 7.00 [TOP]   │
-│                                         │
-│  [WARNING] Rating Member: 6.94               │
-│     Rating Normal: 7.01                │
-│     (Member puas? perlu diimprove!)    │
-│                                         │
-└─────────────────────────────────────────┘
-```
-
-**Narasi:**
-> "Member menghabiskan **$9.67 lebih banyak** per transaksi dibanding pelanggan normal — atau sekitar 3% lebih tinggi. Ini menunjukkan program member sudah cukup efektif. Tapi yang menarik, rating member justru **sedikit lebih rendah** dibanding normal. Kemungkinan karena ekspektasi mereka lebih tinggi. Untuk metode bayar, Cash dan Ewallet mendominasi ~34.5% masing-masing, sementara Credit card masih yang paling jarang digunakan."
-
----
-
-## SLIDE 10 — TEMUAN: KORELASI (⏱ 1 menit)
-
-**Slide:**
-```
-┌─────────────────────────────────────────┐
-│  TEMUAN 4: ANALISIS KORELASI            │
-├─────────────────────────────────────────┤
-│                                         │
-│  [SCATTER PLOT: Total vs Rating]       │
-│  Trend line hampir datar!              │
-│                                         │
-│  [NO] TIDAK ADA KORELASI                  │
-│  antara Total transaksi & Rating       │
-│  antara Quantity & Rating              │
-│                                         │
-│  [INFO] ARTINYA:                           │
-│  Kepuasan TIDAK tergantung             │
-│  nominal belanja!                      │
-│  Kualitas layanan & produk             │
-│  lebih penting!                        │
-│                                         │
-└─────────────────────────────────────────┘
-```
-
-**Narasi:**
-> "Ini temuan yang paling penting secara strategis: **tidak ada korelasi** antara nilai transaksi dengan kepuasan pelanggan. Lihat scatter plot ini — penyebarannya acak. Pelanggan yang belanja $10 bisa kasih rating 10, dan yang belanja $1.000 bisa kasih rating 5. **Kesimpulannya**: kepuasan pelanggan tidak ditentukan oleh seberapa banyak mereka belanja. Faktor yang lebih penting adalah kualitas layanan dan kualitas produk."
-
-**[TIP] TIP:** Ini slide paling penting! Tekankan dengan suara lo.
-
----
-
-## SLIDE 11 — CALCULATED FIELDS (⏱ 30 detik)
-
-**Slide:**
-```
-┌─────────────────────────────────────────┐
-│  CALCULATED FIELDS                      │
-├─────────────────────────────────────────┤
-│                                         │
-│  [Screenshot panel Data Tableau]       │
-│                                         │
-│  1. Hour = INT(LEFT([Time], 2))        │
-│  2. Day of Week = DATENAME(...)        │
-│  3. Revenue per Unit = Total/Quantity  │
-│  4. Rating Category = IF Rating...     │
-│  5. Transaction Size = IF Quantity...  │
-│  6. Month = DATENAME('month', [Date])  │
-│  7. Week Number = DATEPART('week'...)  │
-│                                         │
-└─────────────────────────────────────────┘
-```
-
-**Narasi:**
-> "Kami membuat 7 Calculated Fields di Tableau. Yang paling krusial adalah **Hour**, yang mengekstrak jam dari string Time, sehingga kami bisa menganalisis peak hour. Ada juga **Rating Category** untuk mengelompokkan rating menjadi High, Medium, dan Low, serta **Transaction Size** untuk mengkategorikan besar kecilnya transaksi."
-
----
-
-## SLIDE 12 — DASHBOARD DEMO (⏱ 2 menit)
-
-**Slide:**
-```
-┌─────────────────────────────────────────┐
-│  DASHBOARD INTERAKTIF — TABLEAU         │
-├─────────────────────────────────────────┤
-│                                         │
-│  [FULL DASHBOARD SCREENSHOT]           │
-│                                         │
-│  FITUR INTERAKTIF:                     │
-│  [TARGET] Quick Filter: City, Product       │
-│  [LINK] Filter Action: Klik → Filter      │
-│  [SETTING] Parameter: Top N Products         │
-│                                         │
-│  6 SHEET DALAM 1 DASHBOARD:            │
-│  Revenue Trend | Product Performance   │
-│  Customer Analysis | Hourly Activity   │
-│  City Comparison | Rating Dist.        │
-│                                         │
-└─────────────────────────────────────────┘
-```
-
-**Narasi:**
-> "Ini dashboard final kami. Terdiri dari 6 sheet visualisasi dalam satu layout. Ada 3 fitur interaktif utama: **Quick Filter** untuk memilih cabang atau produk, **Filter Action** — klik cabang di chart Revenue Trend dan semua sheet akan terfilter otomatis, dan **Parameter Top N Products** untuk mengatur jumlah produk teratas yang ditampilkan. Dashboard ini bisa digunakan oleh manajer untuk monitoring secara real-time."
-
-**[TIP] TIP:** Kalau bisa, **demo live** di Tableau. Buka file .twbx dan tunjukkin filter action. Ini yang paling impressive buat dosen!
-
----
-
-## SLIDE 13 — REKOMENDASI (⏱ 1.5 menit)
-
-**Slide:**
-```
-┌─────────────────────────────────────────┐
-│  REKOMENDASI STRATEGIS                  │
-├─────────────────────────────────────────┤
-│                                         │
-│  [P1] P1: OPTIMASI JAM OPERASIONAL       │
-│  • Tambah staf 18:30-20:00             │
-│  • Happy Hour promo jam 17:00-18:00    │
-│                                         │
-│  [P1] P1: TINGKATKAN PROGRAM MEMBER      │
-│  • Tiered membership (Silver/Gold/...) │
-│  • Referral program                    │
-│  • Target: 60% member                  │
-│                                         │
-│  [POINT] P2: STRATEGI PRODUK PER CABANG     │
-│  [POINT] P2: INVESTIGASI RATING MANDALAY    │
-│  [POINT] P3: PROMOSI CREDIT CARD            │
-│                                         │
-└─────────────────────────────────────────┘
-```
-
-**Narasi:**
-> "Berdasarkan temuan kami, ada 5 rekomendasi. Prioritas utama: **Optimasi jam operasional** — tambah staf di jam 19:00 karena itu golden hour, dan buat promo Happy Hour di jam sepi untuk meratakan traffic. Prioritas kedua: **Tingkatkan program member** — buat tiered membership dan referral program, targetkan 60% member. Ada juga rekomendasi untuk strategi produk per cabang, investigasi rating Mandalay yang paling rendah, dan promosi credit card."
-
----
-
-## SLIDE 14 — KESIMPULAN (⏱ 1 menit)
-
-**Slide:**
-```
-┌─────────────────────────────────────────┐
-│  KESIMPULAN                             │
-├─────────────────────────────────────────┤
-│                                         │
-│  1️⃣ Naypyitaw juara revenue ($110K)    │
-│  2️⃣ Jam 19:00 = golden hour           │
-│  3️⃣ F&B = produk terbaik (revenue &    │
-│     rating tertinggi)                   │
-│  4️⃣ Member +3% lebih tinggi dari Normal│
-│  5️⃣ Kepuasan ≠ nominal transaksi       │
-│     (fokus pada kualitas layanan!)     │
-│  6️⃣ Dashboard siap monitoring          │
-│                                         │
-│  [DATA] TOTAL REVENUE: $322,966.75         │
-│  ⭐ AVG RATING: 6.97/10               │
-│                                         │
-└─────────────────────────────────────────┘
-```
-
-**Narasi:**
-> "Kesimpulan dari analisis kami: Naypyitaw adalah cabang dengan performa terbaik. Jam 19:00 adalah waktu paling strategis. Food & Beverages adalah produk unggulan. Program member sudah efektif tapi bisa dioptimasi. Yang paling penting: kepuasan pelanggan tidak terkait nominal belanja — jadi fokus pada kualitas layanan, bukan cuci gudang. Dashboard sudah siap digunakan untuk monitoring."
-
----
-
-## SLIDE 15 — TERIMA KASIH (⏱ 30 detik)
-
-**Slide:**
-```
-┌─────────────────────────────────────────┐
-│                                         │
-│         TERIMA KASIH                   │
-│                                         │
-│    Terima kasih Any Questions?                   │
-│                                         │
-│    Kontak:                             │
-│    Mu'adz Hudzaifah — [NIM] — [IG/WA]         │
-│    Alhaq Sabilil Izati — [NIM] — [IG/WA]         │
-│    Arfan Ghifari (24903460016) — [NIM] — [IG/WA]         │
-│                                         │
-│    [FOLDER] Dashboard:                       │
-│    [Link Tableau Public / QR Code]     │
-│                                         │
-│    "Data is the new oil"               │
-│                                         │
-└─────────────────────────────────────────┘
-```
-
-**Narasi:**
-> "Terima kasih atas perhatiannya. Kami siap menerima pertanyaan. Untuk teman-teman yang ingin melihat dashboard secara langsung, bisa akses link QR code ini. Sekali lagi, terima kasih."
-
-**[TIP] TIP:** Kalau ada sesi tanya jawab, siapin jawaban untuk pertanyaan-pertanyaan ini:
-1. "Kenapa pilih dataset ini?" → Karena bersih, lengkap, cocok untuk retail analytics
-2. "Apa keterbatasan analisis?" → Data sintetis, hanya 3 bulan, tidak ada biaya operasional
-3. "Kenapa pake Tableau?" → Karena fitur interaktifnya lengkap, drag-and-drop, easy to use
-4. "Apa yang paling menarik?" → Bahwa kepuasan tidak berkorelasi dengan nominal transaksi!
-
----
-
-## RINGKASAN EKSEKUSI PRESENTASI
-
-| Slide | Judul | Durasi | Persiapan |
-|:-----:|-------|:------:|-----------|
-| 1 | Cover | 30 detik | Siapin nama & NIM |
-| 2 | Latar Belakang | 1 menit | Hafalin konteks |
-| 3 | Dataset Overview | 1 menit | Hafalin angka |
-| 4 | Pertanyaan Bisnis | 1 menit | Hafalin 5 sub-Q |
-| 5 | Tahapan Analisis | 30 detik | Hafalin flowchart |
-| 6 | Pembersihan Data | 1 menit | Siapin screenshot |
-| 7 | Tren Penjualan | 1.5 menit | **Tunjuk chart Naypyitaw** |
-| 8 | Analisis Produk | 1.5 menit | **Tunjuk heatmap** |
-| 9 | Analisis Pelanggan | 1 menit | Hafalin angka |
-| 10 | Korelasi | 1 menit | **SLIDE PALING PENTING** |
-| 11 | Calculated Fields | 30 detik | Cukup sebutin |
-| 12 | Dashboard Demo | 2 menit | **Live demo / screenshot** |
-| 13 | Rekomendasi | 1.5 menit | Hafalin 5 rekomendasi |
-| 14 | Kesimpulan | 1 menit | Hafalin 6 poin |
-| 15 | Terima Kasih | 30 detik | Siapin Q&A |
-| **Total** | | **~15 menit** | **Siap!** [OK] |
-
----
-
-## TIPS WAJIB SEBELUM PRESENTASI
+## **Metodologi — 6 Tahap Analisis**
 
 ```
-□ Semua anggota paham isi analisis (jangan cuma 1 orang)
-□ Slide sudah di-copy ke USB / Google Drive / laptop
-□ File .twbx siap untuk demo (atau screenshot cadangan)
-□ Latihan 1-2x sebelum presentasi (ukur durasi)
-□ Cek proyektor / LCD sebelum maju
-□ Siapin jawaban untuk Q&A (lihat slide 15)
-□ Font slide readable dari jarak 3 meter (min 24pt judul)
-□ Warna kontras (jangan kuning di background putih)
-□ Backup: PDF slide di HP kalau laptop bermasalah
+┌─────────────┐
+│ Pemahaman   │  Identifikasi stakeholder & pertanyaan bisnis
+│ Masalah     │
+└──────┬──────┘
+       ↓
+┌─────────────┐
+│ Profiling   │  Analisis struktur data, tipe data, 5V Big Data
+│ Data        │
+└──────┬──────┘
+       ↓
+┌─────────────┐
+│ Pembersihan │  Missing values, duplikasi, outlier, standarisasi tipe
+│ Data        │
+└──────┬──────┘
+       ↓
+┌─────────────┐
+│ EDA         │  Visualisasi distribusi, tren, korelasi, segmentasi
+│ (Tableau)   │
+└──────┬──────┘
+       ↓
+┌─────────────┐
+│ Dashboard   │  6 sheet → 1 dashboard interaktif + filter actions
+│ Interaktif  │
+└──────┬──────┘
+       ↓
+┌─────────────┐
+│ Sintesis &  │  Kesimpulan & rekomendasi strategis
+│ Rekomendasi │
+└─────────────┘
 ```
 
 ---
 
-**GOOD LUCK! [TARGET] GASKEUN! [P1]**
+## **Data Profiling — Analisis 5V**
+
+| V | Konsep | Realisasi Dataset |
+|---|--------|-------------------|
+| **Volume** | Jumlah data besar | 1.000 baris × 17 kolom — representatif untuk ritel skala menengah |
+| **Velocity** | Kecepatan data masuk | Timestamp per transaksi, rentang jam 10:00–20:59 |
+| **Variety** | Keragaman tipe data | Numerik, kategorikal, temporal, tekstual |
+| **Veracity** | Kualitas data | 0 missing values, 0 duplikasi, sintetis → konsisten tinggi |
+| **Value** | Nilai bisnis | Rekomendasi strategis: stok, member, pricing, kepuasan |
+
+---
+
+## **Data Cleaning — Bersih Sempurna!**
+
+![width:700px](assets/Data-Quality.jpg)
+
+| Aspek | Status | Detail |
+|-------|--------|--------|
+| **Missing Values** | ✅ Bersih | 0 null dari 17 kolom, 1.000 baris lengkap |
+| **Duplikasi** | ✅ Bersih | COUNT = COUNTD = 1.000 — tidak ada duplikat |
+| **Inkonsistensi Format** | ✅ Bersih | Semua kategorikal konsisten |
+| **Outlier** | ✅ Bersih | Tidak ada outlier ekstrem (Box Plot valid) |
+| **Konversi Date** | ✅ Selesai | String → Date (M/D/YYYY) |
+| **Konversi Time** | ✅ Selesai | String → Time → Hour extracted |
+
+---
+
+## **Outlier Analysis — Box Plot**
+
+![width:700px](assets/Box-Plot-Total.jpg)
+
+**Box Plot Total per City:**
+- Nilai Total: **$10.68 – $1,042.65**
+- Tidak ada outlier signifikan per cabang
+- Sebaran data sehat, tidak ada data perlu dibuang
+
+![width:700px](assets/Box-Plot-Rating.jpg)
+
+**Box Plot Rating per Product Line:**
+- Rating 4.0–10.0, tidak ada outlier ekstrem
+- Sebaran normal, data valid untuk analisis
+
+---
+
+## **Calculated Fields (7 Field)**
+
+| No | Nama Field | Formula | Kegunaan |
+|:--:|------------|---------|----------|
+| 1 | **Hour** | `INT(LEFT([Time], 2))` | Ekstrak jam untuk peak hours |
+| 2 | **Day of Week** | `DATENAME('weekday', [Date])` | Pola mingguan |
+| 3 | **Revenue per Unit** | `[Total] / [Quantity]` | Harga rata-rata per unit |
+| 4 | **Rating Category** | `IF [Rating] >= 9 THEN "High"...` | Kategorisasi rating |
+| 5 | **Transaction Size** | `IF [Quantity] >= 7 THEN "Large"...` | Ukuran transaksi |
+| 6 | **Month** | `DATENAME('month', [Date])` | Analisis bulanan |
+| 7 | **Week Number** | `DATEPART('week', [Date])` | Tren mingguan |
+
+---
+
+## **Temuan 1: Tren Penjualan**
+
+![width:700px](assets/Revenue-Trend.jpg)
+
+| Kota | Transaksi | Total Revenue | Avg Transaction |
+|------|:---------:|:------------:|:---------------:|
+| **Naypyitaw** | 328 | **$110,568.71** 🏆 | **$337.10** 🏆 |
+| Yangon | 340 | $106,200.37 | $312.35 |
+| Mandalay | 332 | $106,197.67 | $319.87 |
+
+**Key Insight:** Naypyitaw unggul meski transaksi paling sedikit — AOV tertinggi!
+
+---
+
+## **Temuan 1b: Jam Sibuk (Peak Hour)**
+
+![width:700px](assets/Hourly-Activity.jpg)
+
+| Jam | Transaksi | Total Revenue | Insight |
+|:---:|:---------:|:-------------:|---------|
+| **19:00** 🏆 | **113** | **$39,699.51** | **Golden hour — puncak aktivitas!** |
+| 13:00 | 103 | $34,723.23 | Lonjakan siang hari |
+| 15:00 | 102 | $31,179.51 | Stabil tinggi |
+| 20:00 | 75 | $22,969.53 | Menjelang tutup |
+
+**Rekomendasi:** Tambah staf kasir di **18:30–20:00**, Happy Hour promo jam 17:00–18:00
+
+---
+
+## **Temuan 2: Performa Produk**
+
+![width:700px](assets/Product-Performance.jpg)
+
+| Product Line | Revenue | % Kontribusi | Avg Rating |
+|-------------|:------:|:-----------:|:---------:|
+| **Food & Beverages** 🏆 | **$56,145** | **17.38%** | **7.11** 🏆 |
+| Sports & Travel | $55,123 | 17.07% | 6.92 |
+| Electronic Accessories | $54,338 | 16.82% | 6.92 |
+| Fashion Accessories | $54,306 | 16.81% | 7.03 |
+| Home & Lifestyle | $53,862 | 16.68% | 6.84 |
+| Health & Beauty | $49,194 | 15.23% | 7.00 |
+
+**Insight:** Distribusi merata (15–17%) — diversifikasi produk berjalan baik
+
+---
+
+## **Temuan 2b: Preferensi Produk per Cabang**
+
+![width:700px](assets/City-Comparison.jpg)
+
+| Produk | Mandalay | Naypyitaw | Yangon |
+|--------|:-------:|:---------:|:-----:|
+| Electronic accessories | $17,051 | $18,969 | $18,317 |
+| Fashion accessories | $16,413 | **$21,560** | $16,333 |
+| Food & Beverages | $15,215 | **$23,767** | $17,163 |
+| Health & Beauty | $19,981 | $16,615 | $12,598 |
+| Home & Lifestyle | $17,549 | $13,896 | **$22,417** |
+| Sports & Travel | $19,988 | $15,762 | $19,373 |
+
+**Tiap cabang punya karakteristik unik!** → Strategi produk per cabang
+
+---
+
+## **Temuan 3: Analisis Pelanggan**
+
+![width:700px](assets/Customer-Analysis.jpg)
+
+| Metrik | Member | Normal | Selisih |
+|--------|:-----:|:------:|:-------:|
+| **Jumlah Transaksi** | 501 | 499 | +2 |
+| **Total Revenue** | $164,223 | $158,743 | **+$5,480** |
+| **Avg Spend** | **$327.79** 🏆 | $318.12 | **+$9.67 (+3%)** |
+| **Avg Rating** | 6.94 | 7.01 | -0.07 |
+
+**Insight:** Member spend lebih tinggi, rating sedikit lebih rendah (ekspektasi tinggi)
+
+---
+
+## **Temuan 3b: Metode Pembayaran**
+
+![width:700px](assets/Payment-Analysis.jpg)
+
+| Metode | Transaksi | Total Revenue | Avg Rating |
+|--------|:----------:|:------------:|:---------:|
+| **Cash** | 344 (34.4%) | **$112,207** | 6.97 |
+| **Ewallet** | 345 (34.5%) | $109,993 | 6.95 |
+| **Credit Card** | 311 (31.1%) | $100,767 | **7.00** 🏆 |
+
+**Insight:** Cash & Ewallet dominan. Credit card paling sedikit tapi rating tertinggi!
+
+---
+
+## **Temuan 4: Korelasi — Tidak Ada!**
+
+**Scatter Plot: Total vs Rating**
+- Trend line hampir **datar**
+- **Tidak ada korelasi** antara nilai transaksi dengan rating
+- Pelanggan $10 bisa rating 10, pelanggan $1,000 bisa rating 5
+- Jumlah item (Quantity) juga **tidak berkorelasi** dengan rating
+
+```
+Rating
+10 │  ·  ··   · ··  ·· ·  · ·  ··· ··   ·
+ 9 │  ·  ··   · ···· ··· · · · ···· ···  ·
+ 8 │  ·· ···  ··························  ·
+ 7 │  ·· ···  ··························  ·
+ 6 │  ·· ···  ··························  ·
+ 5 │  ·  ··   · ···· ··· · · · ···· ···  ·
+ 4 │  ·  ··   · ··  ·· ·  · ·  ··· ··   ·
+   └─────────────────────────────────────
+    $10                        $1,042  Total
+```
+
+**⚠️ Kepuasan TIDAK tergantung nominal belanja — fokus pada KUALITAS LAYANAN!**
+
+---
+
+## **Dashboard Interaktif — Tableau**
+
+```
+┌──────────────────────────────────────────────────┐
+│  SUPERMARKET SALES DASHBOARD — Jan-Mar 2019       │
+├──────────────────┬───────────────────────────────┤
+│  REVENUE TREND   │  PRODUCT PERFORMANCE           │
+│  (Line Chart)    │  (Bar Chart)                  │
+├──────────────────┼───────────────────────────────┤
+│  CUSTOMER        │  HOURLY ACTIVITY               │
+│  ANALYSIS (Bar)  │  (Bar Chart)                  │
+├──────────────────┼───────────────────────────────┤
+│  CITY COMPARISON │  RATING DISTRIBUTION           │
+│  (Side-by-side)  │  (Histogram)                  │
+└──────────────────┴───────────────────────────────┘
+```
+
+**10 Worksheets dalam .twbx:**
+Revenue Trend · Product Performance · Customer Analysis · Hourly Activity
+City Comparison · Rating Distribution · Payment Analysis · Data Quality
+Box Plot Total · Box Plot Rating
+
+---
+
+## **Fitur Interaktif Dashboard**
+
+### Quick Filters:
+- ✅ **City** — Pilih satu atau semua cabang
+- ✅ **Product Line** — Fokus kategori produk
+- ✅ **Customer Type** — Member / Normal
+
+### Filter Action:
+- 🔗 Klik cabang di Revenue Trend → semua sheet terfilter otomatis
+
+### Parameter:
+- 🎚️ **Top N Products** — Slider (1–6) untuk menampilkan produk teratas
+
+### Export:
+- 📦 Format **.twbx** — data + visualisasi dalam 1 file portabel
+
+---
+
+## **Rekomendasi Strategis**
+
+| # | Rekomendasi | Dampak | Usaha | Prioritas |
+|:-:|------------|:------:|:-----:|:---------:|
+| 1 | **Optimasi jam operasional** — Tambah staf 18:30–20:00, Happy Hour promo 17:00–18:00 | 🟢 Tinggi | 🔵 Rendah | **P1** |
+| 2 | **Tingkatkan program member** — Tiered membership, referral program, target 60% member | 🟢 Tinggi | 🟡 Sedang | **P1** |
+| 3 | **Strategi produk per cabang** — Naypyitaw: F&B, Yangon: Home & Lifestyle, Mandalay: Health & Beauty | 🟡 Sedang | 🟡 Sedang | **P2** |
+| 4 | **Investigasi rating Mandalay** (6.82) — Survei kepuasan, evaluasi layanan | 🟡 Sedang | 🔵 Rendah | **P2** |
+| 5 | **Promosi Credit Card** — Diskon 2%, kerja sama bank untuk cicilan 0% | 🔵 Rendah | 🔵 Rendah | **P3** |
+
+---
+
+## **Kesimpulan (6 Poin Utama)**
+
+| # | Kesimpulan | Detail |
+|:-:|-----------|--------|
+| 1️⃣ | **Naypyitaw juara revenue** | $110,568 — AOV $337 vs $312 (Yangon) |
+| 2️⃣ | **Jam 19:00 golden hour** | 113 transaksi, $39,699.51 dalam 1 jam! |
+| 3️⃣ | **F&B produk terbaik** | Revenue & rating tertinggi (7.11) |
+| 4️⃣ | **Member +3% lebih tinggi** | $327.79 vs $318.12 per transaksi |
+| 5️⃣ | **Kepuasan ≠ nominal** | Scatter plot acak — fokus pada kualitas! |
+| 6️⃣ | **Dashboard siap pakai** | 6 sheet, 3 filter, 1 parameter, 1 file .twbx |
+
+---
+
+## **Keterbatasan & Saran**
+
+### Keterbatasan:
+- Data hanya **3 bulan** — belum bisa deteksi pola tahunan
+- Dataset **sintetis** — perlu validasi data riil
+- Tidak ada data **biaya operasional** → belum bisa hitung profitabilitas
+- Rating **subjektif** — interpretasi tiap pelanggan berbeda
+
+### Saran Pengembangan:
+- ⏱️ Perluas data ke minimal **1 tahun**
+- 📊 Tambah data biaya operasional untuk analisis profitabilitas
+- 👥 Survei langsung untuk data kualitatif
+- 🤖 Analisis **prediktif** — ML untuk prediksi tren
+- 📈 Bandingkan dengan **periode tahun berikutnya**
+
+---
+
+## **Call to Action**
+
+### **Repositori Laporan:**
+🌐 [github.com/muadzhdz/RoadToUAS-BigDataScience](https://github.com/muadzhdz/RoadToUAS-BigDataScience)
+
+### **Automated Report Generation:**
+⚡ [github.com/muadzhdz/laporan-generator](https://github.com/muadzhdz/laporan-generator.git)
+> Cetak laporan akademik dari Markdown ke PDF dengan 1 perintah!
+
+### **Dashboard Tableau:**
+📦 File `Supermarket_Sales_Dashboard.twbx` — Buka dengan Tableau Desktop
+
+---
+
+<!-- _class: lead -->
+
+# **Terima Kasih**
+### 🙏
+
+**Any Questions?**
+
+**Kontak:**
+- Mu'adz Hudzaifah — 24903460014
+- Alhaq Sabilil Izati — 24903460012
+- Arfan Ghifari — 24903460016
+
+---
+
+### **Q&A Preparation**
+
+| Pertanyaan | Jawaban |
+|-----------|---------|
+| Kenapa pilih dataset ini? | Bersih, lengkap, representatif untuk retail analytics |
+| Apa keterbatasan analisis? | Data sintetis, hanya 3 bulan, tidak ada biaya operasional |
+| Kenapa pake Tableau? | Fitur interaktif lengkap, drag-and-drop, easy to use |
+| Temuan paling menarik? | Kepuasan **tidak berkorelasi** dengan nominal transaksi! |
+| Dashboard bisa diakses di mana? | File .twbx — portabel, buka di Tableau Desktop mana pun |
