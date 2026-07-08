@@ -103,8 +103,9 @@ def build_dashboard_xml():
     fw = 22500  # each filter width to perfectly fill bar: (100000 - 10000) / 4
     for i, (field, label, src_ws) in enumerate(filters):
         x = 10000 + i * fw
-        lines.append(f'        <zone type-v2="layout-basic" name="qf_{field}" size-pos="{x},0,{fw},7000">')
-        lines.append(f'          <zone type="quick-filter" name="quickfilter_{field}">')
+        safe = field.replace(" ", "_")
+        lines.append(f'        <zone type-v2="layout-basic" name="qf_{safe}" size-pos="{x},0,{fw},7000">')
+        lines.append(f'          <zone type="quick-filter" name="quickfilter_{safe}">')
         lines.append(f'            <filter class="categorical" column="[{DS_NAME}].[none:{field}:nk]"/>')
         lines.append(f'            <worksheet>{src_ws}</worksheet>')
         lines.append('          </zone>')
@@ -192,7 +193,7 @@ def build_actions_xml():
             if src == tgt:
                 continue
             lines.append(f'    <action class="filter" name="Filter from {src} to {tgt}">')
-            lines.append('      <action-options target-type="dashboard"/>')
+            lines.append('      <action-options source-type="selected" target-type="dashboard"/>')
             lines.append(f'      <source-sheet name="{src}"/>')
             lines.append('      <source-filters/>')
             lines.append('      <target-sheets>')
