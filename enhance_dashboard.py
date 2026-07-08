@@ -39,9 +39,9 @@ def build_dashboard_xml():
     lines.append(f'<dashboard name="Supermarket Sales Dashboard">')
     lines.append('  <style/>')
 
-    # datasources
+    # datasources (must include caption to match worksheet references)
     lines.append('  <datasources>')
-    lines.append(f'    <datasource name="{DS_NAME}"/>')
+    lines.append(f'    <datasource caption="supermarket_sales (dataset-blabla)" name="{DS_NAME}"/>')
     lines.append('  </datasources>')
 
     # datasource-dependencies (all columns used by dashboard + quick filters)
@@ -93,19 +93,20 @@ def build_dashboard_xml():
     lines.append('          </zone>')
     lines.append('        </zone>')
 
+    # Each filter must use a source worksheet that HAS the column in its deps
     filters = [
-        ("City", "City"),
-        ("Product line", "Product Line"),
-        ("Payment", "Payment"),
-        ("Customer type", "Customer Type"),
+        ("City", "City", "Revenue Trend"),          # all 10 sheets have City
+        ("Product line", "Product Line", "Revenue Trend"),  # all 10 have Product line
+        ("Payment", "Payment", "Payment Analysis"),  # only Payment Analysis has Payment
+        ("Customer type", "Customer Type", "Customer Analysis"),  # only Customer Analysis has Customer type
     ]
     fw = 22500  # each filter width to perfectly fill bar: (100000 - 10000) / 4
-    for i, (field, label) in enumerate(filters):
+    for i, (field, label, src_ws) in enumerate(filters):
         x = 10000 + i * fw
         lines.append(f'        <zone type-v2="layout-basic" name="qf_{field}" size-pos="{x},0,{fw},7000">')
         lines.append(f'          <zone type="quick-filter" name="quickfilter_{field}">')
         lines.append(f'            <filter class="categorical" column="[{DS_NAME}].[none:{field}:nk]"/>')
-        lines.append('            <worksheet>Revenue Trend</worksheet>')
+        lines.append(f'            <worksheet>{src_ws}</worksheet>')
         lines.append('          </zone>')
         lines.append('        </zone>')
     lines.append('      </zone>')
