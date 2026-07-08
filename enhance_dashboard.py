@@ -7,10 +7,7 @@ Tableau 18.1 XSD dashboard content model:
   style?, size?, datasources, datasource-dependencies*, zones, devicelayouts?, simple-id
 """
 
-import os
-import shutil
-import zipfile
-import uuid as _uuid
+import os, shutil, zipfile, uuid as _uuid, subprocess
 
 TWBX_PATH = "Proyek_BigData/Supermarket_Sales_Dashboard.twbx"
 TMP_DIR = "/tmp/twbx_build"
@@ -47,7 +44,7 @@ def build_dashboard_xml():
     lines.append(f'    <datasource name="{DS_NAME}"/>')
     lines.append('  </datasources>')
 
-    # datasource-dependencies
+    # datasource-dependencies (all columns used by dashboard + quick filters)
     lines.append(f'  <datasource-dependencies datasource="{DS_NAME}">')
     cols = [
         ("[City]", "None", "[none:City:nk]", "nominal"),
@@ -70,28 +67,26 @@ def build_dashboard_xml():
     lines.append('  <zones>')
     lines.append('    <zone type-v2="layout-flow" param="vert" name="outer">')
 
-    # ── TITLE ZONE ──────────────────────────────────
+    # ── TITLE ZONE ──
     lines.append('      <zone type-v2="layout-basic" name="title" size-pos="0,0,100000,6000">')
     lines.append('        <zone type="text" name="title_text">')
     title_cdata = (
         '<title>Supermarket Sales Dashboard</title>'
         '<subtitle>📊 Interactive Analytics Supermarket Sales</subtitle>'
         '<p><b>Petunjuk Penggunaan:</b><br/>'
-        '1️⃣ <b>Quick Filters</b> — Gunakan dropdown/checkbox di bawah ini untuk memfilter '
+        '1️⃣ <b>Quick Filters</b> — Gunakan dropdown/checkbox di bawah untuk memfilter '
         'berdasarkan <b>City</b>, <b>Product Line</b>, <b>Payment</b>, atau <b>Customer Type</b>. '
-        'Semua chart akan berubah otomatis.<br/>'
-        '2️⃣ <b>Klik Chart</b> — Klik bar/line/dot di chart mana pun untuk cross-filter '
+        'Semua chart berubah otomatis.<br/>'
+        '2️⃣ <b>Klik Chart</b> — Klik baris/garis/dot di chart mana pun untuk cross-filter '
         'semua chart lainnya.<br/>'
-        '3️⃣ <b>Reset Filter</b> — Klik icon <b>X</b> pada filter atau pilih <b>All</b> '
-        'untuk mereset.</p>'
+        '3️⃣ <b>Reset</b> — Klik <b>X</b> pada filter atau pilih <b>All</b> untuk mereset.</p>'
     )
     lines.append(f'          <text><![CDATA[{title_cdata}]]></text>')
     lines.append('        </zone>')
     lines.append('      </zone>')
 
-    # ── QUICK FILTERS BAR ──────────────────────────
+    # ── QUICK FILTERS BAR ──
     lines.append('      <zone type-v2="layout-flow" param="horz" name="filter_bar" size-pos="0,6000,100000,7000">')
-    # Label
     lines.append('        <zone type-v2="layout-basic" name="filter_label" size-pos="0,0,10000,7000">')
     lines.append('          <zone type="text" name="flabel">')
     lines.append('            <text><![CDATA[<b>Filters:</b>]]></text>')
@@ -112,13 +107,12 @@ def build_dashboard_xml():
         lines.append('            <worksheet>Revenue Trend</worksheet>')
         lines.append('          </zone>')
         lines.append('        </zone>')
-
     lines.append('      </zone>')
 
-    # ── MAIN CONTENT ──────────────────────────────
+    # ── MAIN CONTENT ──
     lines.append('      <zone type-v2="layout-flow" param="vert" name="main" size-pos="0,13000,100000,80000">')
 
-    # Row 1: Revenue Trend (full width) + Data Quality + Hourly Activity
+    # Row 1: Revenue Trend (70%) + Data Quality (15%) + Hourly Activity (15%)
     lines.append('        <zone type-v2="layout-flow" param="horz" name="row1" size-pos="0,0,100000,25000">')
     lines.append('          <zone type-v2="layout-basic" name="revenue_trend" size-pos="0,0,70000,25000">')
     lines.append('            <zone type="worksheet">')
@@ -127,7 +121,8 @@ def build_dashboard_xml():
     lines.append('          </zone>')
     lines.append('          <zone type-v2="layout-flow" param="vert" name="kpi_stack" size-pos="70000,0,30000,25000">')
     for name, y in [("Data Quality", "0"), ("Hourly Activity", "12500")]:
-        lines.append(f'            <zone type-v2="layout-basic" name="{name.lower().replace(" ","_")}" size-pos="0,{y},30000,12000">')
+        sn = name.lower().replace(" ", "_")
+        lines.append(f'            <zone type-v2="layout-basic" name="{sn}" size-pos="0,{y},30000,12000">')
         lines.append('              <zone type="worksheet">')
         lines.append(f'                <worksheet>{name}</worksheet>')
         lines.append('              </zone>')
@@ -139,7 +134,8 @@ def build_dashboard_xml():
     lines.append('        <zone type-v2="layout-flow" param="horz" name="row2" size-pos="0,25000,100000,20000">')
     for name in ("Product Performance", "Customer Analysis"):
         x = "0" if name == "Product Performance" else "50000"
-        lines.append(f'          <zone type-v2="layout-basic" name="{name.lower().replace(" ","_")}" size-pos="{x},0,50000,20000">')
+        sn = name.lower().replace(" ", "_")
+        lines.append(f'          <zone type-v2="layout-basic" name="{sn}" size-pos="{x},0,50000,20000">')
         lines.append('            <zone type="worksheet">')
         lines.append(f'              <worksheet>{name}</worksheet>')
         lines.append('            </zone>')
@@ -150,7 +146,8 @@ def build_dashboard_xml():
     lines.append('        <zone type-v2="layout-flow" param="horz" name="row3" size-pos="0,45000,100000,20000">')
     for name in ("City Comparison", "Payment Analysis"):
         x = "0" if name == "City Comparison" else "50000"
-        lines.append(f'          <zone type-v2="layout-basic" name="{name.lower().replace(" ","_")}" size-pos="{x},0,50000,20000">')
+        sn = name.lower().replace(" ", "_")
+        lines.append(f'          <zone type-v2="layout-basic" name="{sn}" size-pos="{x},0,50000,20000">')
         lines.append('            <zone type="worksheet">')
         lines.append(f'              <worksheet>{name}</worksheet>')
         lines.append('            </zone>')
@@ -159,26 +156,45 @@ def build_dashboard_xml():
 
     # Row 4: Rating Distribution | Box Plot Total | Box Plot Rating
     lines.append('        <zone type-v2="layout-flow" param="horz" name="row4" size-pos="0,65000,100000,18000">')
-    thirds = [
+    for name, pos in [
         ("Rating Distribution", "0,0,34000,18000"),
         ("Box Plot Total", "34000,0,33000,18000"),
         ("Box Plot Rating", "67000,0,33000,18000"),
-    ]
-    for name, pos in thirds:
-        lines.append(f'          <zone type-v2="layout-basic" name="{name.lower().replace(" ","_")}" size-pos="{pos}">')
+    ]:
+        sn = name.lower().replace(" ", "_")
+        lines.append(f'          <zone type-v2="layout-basic" name="{sn}" size-pos="{pos}">')
         lines.append('            <zone type="worksheet">')
         lines.append(f'              <worksheet>{name}</worksheet>')
         lines.append('            </zone>')
         lines.append('          </zone>')
     lines.append('        </zone>')
 
-    lines.append('      </zone>')
-    lines.append('    </zone>')
+    lines.append('      </zone>')  # close main
+    lines.append('    </zone>')  # close outer
     lines.append('  </zones>')
 
     dash_uid = uid()
     lines.append(f'  <simple-id uuid="{{{dash_uid}}}"/>')
     lines.append('</dashboard>')
+    return '\n'.join(lines)
+
+
+def build_actions_xml():
+    """Build ACTIONS at workbook level with <source-sheet> for each."""
+    lines = ['  <actions>']
+    for src in SHEETS:
+        for tgt in SHEETS:
+            if src == tgt:
+                continue
+            lines.append(f'    <action class="filter" name="Filter from {src} to {tgt}">')
+            lines.append('      <action-options target-type="dashboard"/>')
+            lines.append(f'      <source-sheet name="{src}"/>')
+            lines.append('      <source-filters/>')
+            lines.append('      <target-sheets>')
+            lines.append(f'        <sheet name="{tgt}"/>')
+            lines.append('      </target-sheets>')
+            lines.append('    </action>')
+    lines.append('  </actions>')
     return '\n'.join(lines)
 
 
@@ -204,33 +220,15 @@ def build_window_xml(dash_name):
     )
 
 
-def build_actions_xml():
-    lines = ['  <actions>']
-    for src in SHEETS:
-        for tgt in SHEETS:
-            if src == tgt:
-                continue
-            lines.append(f'    <action class="filter" name="Filter {src} to {tgt}">')
-            lines.append('      <action-options target-type="dashboard"/>')
-            lines.append('      <source-filters/>')
-            lines.append('      <target-sheets>')
-            lines.append(f'        <sheet name="{tgt}"/>')
-            lines.append('      </target-sheets>')
-            lines.append('    </action>')
-    lines.append('  </actions>')
-    return '\n'.join(lines)
-
-
 def main():
     if os.path.exists(TMP_DIR):
         shutil.rmtree(TMP_DIR)
     os.makedirs(TMP_DIR, exist_ok=True)
 
-    # Extract original from git HEAD~1
-    import subprocess
+    # Extract original from git commit before any dashboard changes
     orig_path = os.path.join(TMP_DIR, "original.twbx")
     subprocess.run(
-        ["git", "show", "HEAD~2:Proyek_BigData/Supermarket_Sales_Dashboard.twbx"],
+        ["git", "show", "46a2392:Proyek_BigData/Supermarket_Sales_Dashboard.twbx"],
         stdout=open(orig_path, "wb"), stderr=subprocess.DEVNULL
     )
 
@@ -238,29 +236,33 @@ def main():
         zf.extractall(TMP_DIR)
 
     twb_path = os.path.join(TMP_DIR, TWB_FILENAME)
-
     with open(twb_path, 'r', encoding='utf-8') as f:
         twb_text = f.read()
 
-    # 1. Inject <dashboards> before <windows>
+    # 1. Inject <actions> BEFORE <worksheets>
+    actions_xml = build_actions_xml()
+    ws_start = twb_text.find('<worksheets>')
+    if ws_start == -1:
+        print("ERROR: Could not find <worksheets>")
+        return False
+    twb_text = twb_text[:ws_start] + actions_xml + '\n  ' + twb_text[ws_start:]
+
+    # 2. Inject <dashboards> BEFORE <windows>
     dash_xml = build_dashboard_xml()
     dash_section = f"<dashboards>\n{dash_xml}\n</dashboards>"
-    windows_start = twb_text.find('<windows')
-    twb_text = twb_text[:windows_start] + '  ' + dash_section + '\n  ' + twb_text[windows_start:]
+    win_start = twb_text.find('<windows')
+    twb_text = twb_text[:win_start] + '  ' + dash_section + '\n  ' + twb_text[win_start:]
 
-    # 2. Inject dashboard window before </windows>
+    # 3. Inject dashboard window BEFORE </windows>
     win_xml = build_window_xml("Supermarket Sales Dashboard")
-    windows_end = twb_text.find('</windows>')
-    twb_text = twb_text[:windows_end] + '\n' + win_xml + '\n' + twb_text[windows_end:]
+    win_end = twb_text.find('</windows>')
+    twb_text = twb_text[:win_end] + '\n' + win_xml + '\n' + twb_text[win_end:]
 
-    # 3. Inject actions before </workbook>
-    actions_xml = build_actions_xml()
-    workbook_end = twb_text.find('</workbook>')
-    twb_text = twb_text[:workbook_end] + '\n' + actions_xml + '\n' + twb_text[workbook_end:]
-
+    # Write
     with open(twb_path, 'w', encoding='utf-8') as f:
         f.write(twb_text)
 
+    # Repackage twbx
     out_path = os.path.join(TMP_DIR, "Supermarket_Sales_Dashboard.twbx")
     with zipfile.ZipFile(out_path, 'w', zipfile.ZIP_DEFLATED) as zf:
         zf.write(twb_path, TWB_FILENAME)
@@ -272,38 +274,130 @@ def main():
                     arcname = os.path.relpath(fp, TMP_DIR)
                     zf.write(fp, arcname)
 
+    # Copy to project
     final_path = os.path.join(os.getcwd(), TWBX_PATH)
     shutil.copy2(out_path, final_path)
 
-    # Verify
+    # ── COMPREHENSIVE VERIFICATION ──
     import xml.etree.ElementTree as ET
     with zipfile.ZipFile(out_path) as z:
         with z.open(TWB_FILENAME) as f:
             raw = f.read()
             text = raw.decode()
-            try:
-                ET.fromstring(text)
-                print(f"✓ Dashboard injected: {final_path}")
-                print(f"✓ XML valid: {len(raw)} bytes")
-                # Report key features
-                features = {
-                    "dashboard": text.count("<dashboard ") == 1,
-                    "quick-filters": "quick-filter" in text,
-                    "cross-actions": text.count("<action ") == 90,
-                    "all-sheets": all(s in text for s in SHEETS),
-                    "instructions": "Petunjuk Penggunaan" in text,
-                    "zones-not-items": "<zones>" in text and "dashboard-items" not in text,
-                    "worksheet-windows": text.count("class='worksheet'") == 10,
-                    "dashboard-window": "class=\"dashboard\"" in text,
-                }
-                for k, v in features.items():
-                    print(f"  {'✓' if v else '✗'} {k}")
-                if all(features.values()):
-                    print("✅ PERFECT! Dashboard ready for use.")
-            except ET.ParseError as e:
-                print(f"✗ XML error: {e}")
-                return False
-    return True
+
+        errors = []
+        ok = []
+
+        try:
+            ET.fromstring(text)
+            ok.append("XML well-formed")
+        except ET.ParseError as e:
+            errors.append(f"XML error: {e}")
+
+        # Structure
+        if text.count("<dashboards>") == 1:
+            ok.append("1 <dashboards> section")
+        else:
+            errors.append(f"<dashboards> count: {text.count('<dashboards>')}")
+
+        if text.count("<dashboard ") == 1:
+            ok.append("1 <dashboard> element")
+        else:
+            errors.append(f"<dashboard> count: {text.count('<dashboard ')}")
+
+        if all(s in text for s in SHEETS):
+            ok.append("All 10 worksheets")
+        else:
+            missing = [s for s in SHEETS if s not in text]
+            errors.append(f"Missing sheets: {missing}")
+
+        # Quick filters
+        qf_count = text.count("quick-filter")
+        if qf_count == 4:
+            ok.append(f"{qf_count} quick filters")
+        else:
+            errors.append(f"Quick filters: {qf_count} (expected 4)")
+
+        # Actions
+        act_count = text.count("<action ")
+        if act_count == 90:
+            ok.append(f"{act_count} cross-filter actions")
+        else:
+            errors.append(f"Actions: {act_count} (expected 90)")
+
+        # source-sheet
+        src_sheet_count = text.count("<source-sheet")
+        if src_sheet_count == 90:
+            ok.append(f"{src_sheet_count} <source-sheet> elements")
+        else:
+            errors.append(f"<source-sheet>: {src_sheet_count} (expected 90)")
+
+        # Windows
+        ws_wins = text.count("class='worksheet'")
+        db_wins = text.count('class="dashboard"')
+        if ws_wins == 10 and db_wins == 1:
+            ok.append(f"{ws_wins} worksheet + {db_wins} dashboard windows")
+        else:
+            errors.append(f"Windows: ws={ws_wins}, dash={db_wins}")
+
+        # zones (not dashboard-items)
+        if "<zones>" in text and "dashboard-items" not in text:
+            ok.append("Proper <zones> structure")
+        else:
+            errors.append("Uses dashboard-items instead of zones")
+
+        # Section order: actions before worksheets before dashboards before windows
+        order_ok = (
+            text.find("<actions>") < text.find("<worksheets>") <
+            text.find("<dashboards>") < text.find("<windows")
+        )
+        if order_ok:
+            ok.append("Correct section order")
+        else:
+            errors.append("Wrong section order")
+
+        # Dashboard internal structure
+        dash = text[text.find("<dashboards>"):text.find("</dashboards>") + len("</dashboards>")]
+        for req in ["<style/>", "<datasources>", "<datasource-dependencies", "<zones>", "<simple-id"]:
+            if req in dash:
+                ok.append(f"Dashboard has {req.split()[0]}")
+            else:
+                errors.append(f"Dashboard missing {req}")
+
+        # UUID uniqueness
+        import re
+        uuids = re.findall(r'uuid="\{([^}]+)\}"', text)
+        if len(uuids) == len(set(uuids)):
+            ok.append(f"All {len(uuids)} UUIDs unique")
+        else:
+            from collections import Counter
+            dups = {k: v for k, v in Counter(uuids).items() if v > 1}
+            errors.append(f"Duplicate UUIDs: {dups}")
+
+        # .hyper data intact
+        data_files = [n for n in z.namelist() if '.hyper' in n]
+        if data_files:
+            ok.append(f"Data extract intact: {data_files[0]}")
+        else:
+            errors.append("Missing .hyper extract")
+
+        print("\n" + "=" * 60)
+        print("  COMPREHENSIVE DASHBOARD VERIFICATION")
+        print("=" * 60)
+        print(f"  File: {final_path}")
+        print(f"  Size: {len(text)} bytes, {len(text.splitlines())} lines")
+        print()
+        for msg in ok:
+            print(f"  ✅ {msg}")
+        print()
+        if errors:
+            for msg in errors:
+                print(f"  ❌ {msg}")
+            return False
+        else:
+            print("  🎯 ALL CHECKS PASSED — DASHBOARD IS COMPLETE!")
+            print("=" * 60)
+            return True
 
 
 if __name__ == "__main__":
