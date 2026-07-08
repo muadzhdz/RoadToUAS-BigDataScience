@@ -99,9 +99,10 @@ def build_dashboard_xml():
         ("Payment", "Payment"),
         ("Customer type", "Customer Type"),
     ]
+    fw = 22500  # each filter width to perfectly fill bar: (100000 - 10000) / 4
     for i, (field, label) in enumerate(filters):
-        x = 10000 + i * 22000
-        lines.append(f'        <zone type-v2="layout-basic" name="qf_{field}" size-pos="{x},0,22000,7000">')
+        x = 10000 + i * fw
+        lines.append(f'        <zone type-v2="layout-basic" name="qf_{field}" size-pos="{x},0,{fw},7000">')
         lines.append(f'          <zone type="quick-filter" name="quickfilter_{field}">')
         lines.append(f'            <filter class="categorical" column="[{DS_NAME}].[none:{field}:nk]"/>')
         lines.append('            <worksheet>Revenue Trend</worksheet>')
@@ -112,17 +113,17 @@ def build_dashboard_xml():
     # ── MAIN CONTENT ──
     lines.append('      <zone type-v2="layout-flow" param="vert" name="main" size-pos="0,13000,100000,80000">')
 
-    # Row 1: Revenue Trend (70%) + Data Quality (15%) + Hourly Activity (15%)
-    lines.append('        <zone type-v2="layout-flow" param="horz" name="row1" size-pos="0,0,100000,25000">')
-    lines.append('          <zone type-v2="layout-basic" name="revenue_trend" size-pos="0,0,70000,25000">')
+    # Row 1: Revenue Trend (70%) + Data Quality + Hourly Activity (30%)
+    lines.append('        <zone type-v2="layout-flow" param="horz" name="row1" size-pos="0,0,100000,24000">')
+    lines.append('          <zone type-v2="layout-basic" name="revenue_trend" size-pos="0,0,70000,24000">')
     lines.append('            <zone type="worksheet">')
     lines.append('              <worksheet>Revenue Trend</worksheet>')
     lines.append('            </zone>')
     lines.append('          </zone>')
-    lines.append('          <zone type-v2="layout-flow" param="vert" name="kpi_stack" size-pos="70000,0,30000,25000">')
-    for name, y in [("Data Quality", "0"), ("Hourly Activity", "12500")]:
+    lines.append('          <zone type-v2="layout-flow" param="vert" name="kpi_stack" size-pos="70000,0,30000,24000">')
+    for name, y, h in [("Data Quality", "0", "11500"), ("Hourly Activity", "12000", "11500")]:
         sn = name.lower().replace(" ", "_")
-        lines.append(f'            <zone type-v2="layout-basic" name="{sn}" size-pos="0,{y},30000,12000">')
+        lines.append(f'            <zone type-v2="layout-basic" name="{sn}" size-pos="0,{y},30000,{h}">')
         lines.append('              <zone type="worksheet">')
         lines.append(f'                <worksheet>{name}</worksheet>')
         lines.append('              </zone>')
@@ -131,11 +132,12 @@ def build_dashboard_xml():
     lines.append('        </zone>')
 
     # Row 2: Product Performance | Customer Analysis
-    lines.append('        <zone type-v2="layout-flow" param="horz" name="row2" size-pos="0,25000,100000,20000">')
+    rh2 = 19000
+    lines.append(f'        <zone type-v2="layout-flow" param="horz" name="row2" size-pos="0,24000,100000,{rh2}">')
     for name in ("Product Performance", "Customer Analysis"):
         x = "0" if name == "Product Performance" else "50000"
         sn = name.lower().replace(" ", "_")
-        lines.append(f'          <zone type-v2="layout-basic" name="{sn}" size-pos="{x},0,50000,20000">')
+        lines.append(f'          <zone type-v2="layout-basic" name="{sn}" size-pos="{x},0,50000,{rh2}">')
         lines.append('            <zone type="worksheet">')
         lines.append(f'              <worksheet>{name}</worksheet>')
         lines.append('            </zone>')
@@ -143,11 +145,12 @@ def build_dashboard_xml():
     lines.append('        </zone>')
 
     # Row 3: City Comparison | Payment Analysis
-    lines.append('        <zone type-v2="layout-flow" param="horz" name="row3" size-pos="0,45000,100000,20000">')
+    rh3 = 19000
+    lines.append(f'        <zone type-v2="layout-flow" param="horz" name="row3" size-pos="0,43000,100000,{rh3}">')
     for name in ("City Comparison", "Payment Analysis"):
         x = "0" if name == "City Comparison" else "50000"
         sn = name.lower().replace(" ", "_")
-        lines.append(f'          <zone type-v2="layout-basic" name="{sn}" size-pos="{x},0,50000,20000">')
+        lines.append(f'          <zone type-v2="layout-basic" name="{sn}" size-pos="{x},0,50000,{rh3}">')
         lines.append('            <zone type="worksheet">')
         lines.append(f'              <worksheet>{name}</worksheet>')
         lines.append('            </zone>')
@@ -155,11 +158,12 @@ def build_dashboard_xml():
     lines.append('        </zone>')
 
     # Row 4: Rating Distribution | Box Plot Total | Box Plot Rating
-    lines.append('        <zone type-v2="layout-flow" param="horz" name="row4" size-pos="0,65000,100000,18000">')
+    rh4 = 18000
+    lines.append(f'        <zone type-v2="layout-flow" param="horz" name="row4" size-pos="0,62000,100000,{rh4}">')
     for name, pos in [
-        ("Rating Distribution", "0,0,34000,18000"),
-        ("Box Plot Total", "34000,0,33000,18000"),
-        ("Box Plot Rating", "67000,0,33000,18000"),
+        ("Rating Distribution", f"0,0,34000,{rh4}"),
+        ("Box Plot Total", f"34000,0,33000,{rh4}"),
+        ("Box Plot Rating", f"67000,0,33000,{rh4}"),
     ]:
         sn = name.lower().replace(" ", "_")
         lines.append(f'          <zone type-v2="layout-basic" name="{sn}" size-pos="{pos}">')
