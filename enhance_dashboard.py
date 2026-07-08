@@ -108,6 +108,9 @@ def build_dashboard_xml():
         lines.append(f'          <zone type="quick-filter" name="quickfilter_{safe}">')
         lines.append(f'            <filter class="categorical" column="[{DS_NAME}].[none:{field}:nk]"/>')
         lines.append(f'            <worksheet>{src_ws}</worksheet>')
+        lines.append('            <filter-options applied-fields="all">')
+        lines.append('              <filter-display type="multiple-values-list"/>')
+        lines.append('            </filter-options>')
         lines.append('          </zone>')
         lines.append('        </zone>')
     lines.append('      </zone>')
@@ -211,7 +214,6 @@ def build_window_xml(dash_name):
         '      <cards>\n'
         '        <edge name="left">\n'
         '          <strip size="160">\n'
-        '            <card type="pages"/>\n'
         '            <card type="filters"/>\n'
         '          </strip>\n'
         '        </edge>\n'
