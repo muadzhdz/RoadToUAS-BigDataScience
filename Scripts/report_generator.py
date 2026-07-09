@@ -9,16 +9,17 @@ with Pandoc or copied into Word/LibreOffice.
 from pathlib import Path
 
 
-ROOT = Path(__file__).resolve().parent
-OUTPUT = ROOT / "luaran" / "Laporan_UAS_BigData_Supermarket_Sales.md"
+SCRIPTS = Path(__file__).resolve().parent
+ROOT = SCRIPTS.parent
+OUTPUT = ROOT / "output_drafts" / "Laporan_UAS_BigData_Supermarket_Sales.md"
 
 STAGE_FILES = [
-    ROOT / "laporan" / "TAHAP1_Pemahaman_Masalah.md",
-    ROOT / "laporan" / "TAHAP2_Profiling_Persiapan_Data.md",
-    ROOT / "laporan" / "TAHAP3_Pembersihan_Data.md",
-    ROOT / "laporan" / "TAHAP4_Analisis_Eksploratif.md",
-    ROOT / "laporan" / "TAHAP5_Dashboard_Interaktif.md",
-    ROOT / "laporan" / "TAHAP6_Sintesis_Rekomendasi.md",
+    ROOT / "stage_drafts" / "TAHAP1_Pemahaman_Masalah.md",
+    ROOT / "stage_drafts" / "TAHAP2_Profiling_Persiapan_Data.md",
+    ROOT / "stage_drafts" / "TAHAP3_Pembersihan_Data.md",
+    ROOT / "stage_drafts" / "TAHAP4_Analisis_Eksploratif.md",
+    ROOT / "stage_drafts" / "TAHAP5_Dashboard_Interaktif.md",
+    ROOT / "stage_drafts" / "TAHAP6_Sintesis_Rekomendasi.md",
 ]
 
 

@@ -9,9 +9,10 @@ Google Slides, Canva, or converted with Pandoc when available.
 from pathlib import Path
 
 
-ROOT = Path(__file__).resolve().parent
-SOURCE = ROOT / "SLIDE_READY.md"
-OUTPUT = ROOT / "luaran" / "Slide_UAS_BigData_Supermarket_Sales.md"
+SCRIPTS = Path(__file__).resolve().parent
+ROOT = SCRIPTS.parent
+SOURCE = ROOT / "markdown" / "SLIDE_READY.md"
+OUTPUT = ROOT / "output_drafts" / "Slide_UAS_BigData_Supermarket_Sales.md"
 
 
 def main() -> None:

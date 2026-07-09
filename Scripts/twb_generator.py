@@ -10,16 +10,17 @@ import json
 from pathlib import Path
 
 
-ROOT = Path(__file__).resolve().parent
+SCRIPTS = Path(__file__).resolve().parent
+ROOT = SCRIPTS.parent
 
 class TWBGenerator:
     def __init__(self):
-        self.spec = json.load(open(ROOT / 'dashboard_spec.json'))
+        self.spec = json.load(open(ROOT / 'markdown' / 'dashboard_spec.json'))
         self.data_spec = self.load_data_spec()
     
     def load_data_spec(self):
         import yaml
-        with open(ROOT / 'data_spec.yaml') as f:
+        with open(ROOT / 'markdown' / 'data_spec.yaml') as f:
             return yaml.safe_load(f)
     
     def build(self):
@@ -261,7 +262,7 @@ def main():
     gen = TWBGenerator()
     xml = gen.build()
     
-    output = ROOT / 'luaran' / 'Supermarket_Sales_Dashboard.twb'
+    output = ROOT / 'output_drafts' / 'Supermarket_Sales_Dashboard.twb'
     output.parent.mkdir(parents=True, exist_ok=True)
     with open(output, 'w') as f:
         f.write(xml)

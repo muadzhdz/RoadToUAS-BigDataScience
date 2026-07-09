@@ -13,10 +13,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 COMMANDS = [
-    ["python3", "scripts/validation_verify.py"],
-    ["python3", "twb_generator.py"],
-    ["python3", "report_generator.py"],
-    ["python3", "slides_generator.py"],
+    ["python3", "Scripts/validation_verify.py"],
+    ["python3", "Scripts/twb_generator.py"],
+    ["python3", "Scripts/report_generator.py"],
+    ["python3", "Scripts/slides_generator.py"],
 ]
 
 

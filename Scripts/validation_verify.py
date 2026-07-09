@@ -12,7 +12,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DATASET = ROOT / "datasets" / "retail" / "supermarket_sales.csv"
+DATASET = ROOT / "dataset" / "supermarket_sales.csv"
 
 def load_data(filepath):
     with open(filepath, 'r') as f:
