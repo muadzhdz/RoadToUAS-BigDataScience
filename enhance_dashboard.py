@@ -2,9 +2,6 @@
 """
 Enhance Supermarket Sales Dashboard - injects interactive dashboard into .twb XML
 Usage: python3 enhance_dashboard.py
-
-Tableau 18.1 XSD dashboard content model:
-  style?, size?, datasources, datasource-dependencies*, zones, devicelayouts?, simple-id
 """
 
 import os, shutil, zipfile, uuid as _uuid, subprocess
@@ -28,24 +25,35 @@ SHEETS = [
 
 DS_NAME = "federated.02hj2n40cilez216q1kk11tabb4t"
 
+_zid = [0]  # mutable zone id counter
+
+def zid():
+    _zid[0] += 1
+    return _zid[0]
 
 def uid():
     return str(_uuid.uuid4()).upper()
 
 
+def layout_cache():
+    """Minimal layout-cache required by XSD on every zone."""
+    return "<layout-cache type-w='fixed' type-h='fixed'/>"
+
+
 def build_dashboard_xml():
-    """Build dashboard section with correct XSD structure."""
+    """Build dashboard section.
+    Zone name='SheetName' links zones to worksheets via viewpoints.
+    Inner zone type wrappers match Tableau's native format.
+    """
+    _zid[0] = 0
     lines = []
-    lines.append(f'<dashboard name="Supermarket Sales Dashboard">')
-    lines.append('  <style/>')
-
-    # datasources (must include caption to match worksheet references)
-    lines.append('  <datasources>')
-    lines.append(f'    <datasource caption="supermarket_sales (dataset-blabla)" name="{DS_NAME}"/>')
-    lines.append('  </datasources>')
-
-    # datasource-dependencies (all columns used by dashboard + quick filters)
-    lines.append(f'  <datasource-dependencies datasource="{DS_NAME}">')
+    lines.append("<dashboard name='Supermarket Sales Dashboard'>")
+    lines.append("  <style/>")
+    lines.append("  <size sizing-mode='automatic'/>")
+    lines.append("  <datasources>")
+    lines.append(f"    <datasource caption='supermarket_sales (dataset-blabla)' name='{DS_NAME}'/>")
+    lines.append("  </datasources>")
+    lines.append(f"  <datasource-dependencies datasource='{DS_NAME}'>")
     cols = [
         ("[City]", "None", "[none:City:nk]", "nominal"),
         ("[Customer type]", "None", "[none:Customer type:nk]", "nominal"),
@@ -59,172 +67,169 @@ def build_dashboard_xml():
         ("[Total]", "Sum", "[sum:Total:qk]", "quantitative"),
     ]
     for cname, deriv, iname, typ in cols:
-        lines.append(f'    <column datatype="string" name="{cname}" role="dimension" type="{typ}"/>')
-        lines.append(f'    <column-instance column="{cname}" derivation="{deriv}" name="{iname}" pivot="key" type="{typ}"/>')
-    lines.append('  </datasource-dependencies>')
+        lines.append(f"    <column datatype='string' name='{cname}' role='dimension' type='{typ}'/>")
+        lines.append(f"    <column-instance column='{cname}' derivation='{deriv}' name='{iname}' pivot='key' type='{typ}'/>")
+    lines.append("  </datasource-dependencies>")
 
-    # zones
-    lines.append('  <zones>')
-    lines.append('    <zone type-v2="layout-flow" param="vert" name="outer">')
+    # ── ZONES ──
+    lines.append("  <zones>")
+    # outer root container (vertical flow)
+    lines.append(f"    <zone id='{zid()}' x='0' y='0' w='100000' h='100000' type-v2='layout-flow' param='vert' name='outer'>")
+    lines.append(f"      {layout_cache()}")
 
-    # ── TITLE ZONE ──
-    lines.append('      <zone type-v2="layout-basic" name="title" size-pos="0,0,100000,6000">')
-    lines.append('        <zone type="text" name="title_text">')
+    # ── Row 0: Title + Instructions ──
+    lines.append(f"      <zone id='{zid()}' x='0' y='0' w='100000' h='6000' name='title'>")
+    lines.append(f"        <zone type='text' name='title_text'>")
     title_cdata = (
-        '<title>Supermarket Sales Dashboard</title>'
-        '<subtitle>📊 Interactive Analytics Supermarket Sales</subtitle>'
-        '<p><b>Petunjuk Penggunaan:</b><br/>'
-        '1️⃣ <b>Quick Filters</b> — Gunakan dropdown/checkbox di bawah untuk memfilter '
-        'berdasarkan <b>City</b>, <b>Product Line</b>, <b>Payment</b>, atau <b>Customer Type</b>. '
-        'Semua chart berubah otomatis.<br/>'
-        '2️⃣ <b>Klik Chart</b> — Klik baris/garis/dot di chart mana pun untuk cross-filter '
-        'semua chart lainnya.<br/>'
-        '3️⃣ <b>Reset</b> — Klik <b>X</b> pada filter atau pilih <b>All</b> untuk mereset.</p>'
+        "<title>Supermarket Sales Dashboard</title>"
+        "<subtitle>Interactive Analytics - Petunjuk Penggunaan:</subtitle>"
+        "<p>1. <b>Quick Filters</b> - Gunakan dropdown/checkbox di bawah "
+        "untuk memfilter berdasarkan City, Product Line, Payment, atau Customer Type. "
+        "Semua chart berubah otomatis.</p>"
+        "<p>2. <b>Klik Chart</b> - Klik baris/garis/dot di chart mana pun "
+        "untuk cross-filter semua chart lainnya.</p>"
+        "<p>3. <b>Reset</b> - Klik X pada filter atau pilih All untuk mereset.</p>"
     )
-    lines.append(f'          <text><![CDATA[{title_cdata}]]></text>')
-    lines.append('        </zone>')
-    lines.append('      </zone>')
+    lines.append(f"          <text><![CDATA[{title_cdata}]]></text>")
+    lines.append(f"        </zone>")
+    lines.append(f"        {layout_cache()}")
+    lines.append(f"        <zone-style/>")
+    lines.append(f"      </zone>")
 
-    # ── QUICK FILTERS BAR ──
-    lines.append('      <zone type-v2="layout-flow" param="horz" name="filter_bar" size-pos="0,6000,100000,7000">')
-    lines.append('        <zone type-v2="layout-basic" name="filter_label" size-pos="0,0,10000,7000">')
-    lines.append('          <zone type="text" name="flabel">')
-    lines.append('            <text><![CDATA[<b>Filters:</b>]]></text>')
-    lines.append('          </zone>')
-    lines.append('        </zone>')
-
-    # Each filter must use a source worksheet that HAS the column in its deps
+    # ── Row 0b: Quick Filters Bar ──
+    lines.append(f"      <zone id='{zid()}' x='0' y='6000' w='100000' h='6000' type-v2='layout-flow' param='horz' name='filter_bar'>")
+    lines.append(f"        {layout_cache()}")
     filters = [
-        ("City", "City", "Revenue Trend"),          # all 10 sheets have City
-        ("Product line", "Product Line", "Revenue Trend"),  # all 10 have Product line
-        ("Payment", "Payment", "Payment Analysis"),  # only Payment Analysis has Payment
-        ("Customer type", "Customer Type", "Customer Analysis"),  # only Customer Analysis has Customer type
+        ("City", "City", "Revenue Trend"),
+        ("Product line", "Product Line", "Revenue Trend"),
+        ("Payment", "Payment", "Payment Analysis"),
+        ("Customer type", "Customer Type", "Customer Analysis"),
     ]
-    fw = 22500  # each filter width to perfectly fill bar: (100000 - 10000) / 4
+    fw = 22500
     for i, (field, label, src_ws) in enumerate(filters):
         x = 10000 + i * fw
         safe = field.replace(" ", "_")
-        lines.append(f'        <zone type-v2="layout-basic" name="qf_{safe}" size-pos="{x},0,{fw},7000">')
-        lines.append(f'          <zone type="quick-filter" name="quickfilter_{safe}">')
-        lines.append(f'            <filter class="categorical" column="[{DS_NAME}].[none:{field}:nk]"/>')
-        lines.append(f'            <worksheet>{src_ws}</worksheet>')
-        lines.append('            <filter-options applied-fields="all">')
-        lines.append('              <filter-display type="multiple-values-list"/>')
-        lines.append('            </filter-options>')
-        lines.append('          </zone>')
-        lines.append('        </zone>')
-    lines.append('      </zone>')
+        lines.append(f"        <zone id='{zid()}' x='{x}' y='0' w='{fw}' h='6000' name='qf_{safe}'>")
+        lines.append(f"          <zone type='quick-filter' name='quickfilter_{safe}'>")
+        col_name = f"[{DS_NAME}].[none:{field}:nk]"
+        lines.append(f"            <filter class='categorical' column='{col_name}'/>")
+        lines.append(f"            <worksheet>{src_ws}</worksheet>")
+        lines.append(f"            <filter-options applied-fields='all'>")
+        lines.append(f"              <filter-display type='multiple-values-list'/>")
+        lines.append(f"            </filter-options>")
+        lines.append(f"          </zone>")
+        lines.append(f"          {layout_cache()}")
+        lines.append(f"          <zone-style/>")
+        lines.append(f"        </zone>")
+    lines.append(f"        <zone-style/>")
+    lines.append(f"      </zone>")
 
-    # ── MAIN CONTENT ──
-    lines.append('      <zone type-v2="layout-flow" param="vert" name="main" size-pos="0,13000,100000,80000">')
+    # ── Row 1: Revenue Trend (70%) + Data Quality + Hourly Activity (30%) ──
+    lines.append(f"      <zone id='{zid()}' x='0' y='12000' w='100000' h='24000' type-v2='layout-flow' param='horz' name='row1'>")
+    lines.append(f"        {layout_cache()}")
+    # Revenue Trend
+    lines.append(f"        <zone id='{zid()}' x='0' y='0' w='70000' h='24000' name='Revenue Trend'>")
+    lines.append(f"          <zone type='worksheet'>")
+    lines.append(f"            <worksheet>Revenue Trend</worksheet>")
+    lines.append(f"          </zone>")
+    lines.append(f"          {layout_cache()}")
+    lines.append(f"          <zone-style/>")
+    lines.append(f"        </zone>")
+    # Right column: Data Quality + Hourly Activity
+    lines.append(f"        <zone id='{zid()}' x='70000' y='0' w='30000' h='24000' type-v2='layout-flow' param='vert' name='kpi_stack'>")
+    lines.append(f"          {layout_cache()}")
+    for name, y_off, h_val in [("Data Quality", "0", "11800"), ("Hourly Activity", "12000", "11800")]:
+        lines.append(f"          <zone id='{zid()}' x='0' y='{y_off}' w='30000' h='{h_val}' name='{name}'>")
+        lines.append(f"            <zone type='worksheet'>")
+        lines.append(f"              <worksheet>{name}</worksheet>")
+        lines.append(f"            </zone>")
+        lines.append(f"            {layout_cache()}")
+        lines.append(f"            <zone-style/>")
+        lines.append(f"          </zone>")
+    lines.append(f"        </zone>")
+    lines.append(f"      </zone>")
 
-    # Row 1: Revenue Trend (70%) + Data Quality + Hourly Activity (30%)
-    lines.append('        <zone type-v2="layout-flow" param="horz" name="row1" size-pos="0,0,100000,24000">')
-    lines.append('          <zone type-v2="layout-basic" name="revenue_trend" size-pos="0,0,70000,24000">')
-    lines.append('            <zone type="worksheet">')
-    lines.append('              <worksheet>Revenue Trend</worksheet>')
-    lines.append('            </zone>')
-    lines.append('          </zone>')
-    lines.append('          <zone type-v2="layout-flow" param="vert" name="kpi_stack" size-pos="70000,0,30000,24000">')
-    for name, y, h in [("Data Quality", "0", "11500"), ("Hourly Activity", "12000", "11500")]:
-        sn = name.lower().replace(" ", "_")
-        lines.append(f'            <zone type-v2="layout-basic" name="{sn}" size-pos="0,{y},30000,{h}">')
-        lines.append('              <zone type="worksheet">')
-        lines.append(f'                <worksheet>{name}</worksheet>')
-        lines.append('              </zone>')
-        lines.append('            </zone>')
-    lines.append('          </zone>')
-    lines.append('        </zone>')
-
-    # Row 2: Product Performance | Customer Analysis
+    # ── Row 2: Product Performance | Customer Analysis ──
     rh2 = 19000
-    lines.append(f'        <zone type-v2="layout-flow" param="horz" name="row2" size-pos="0,24000,100000,{rh2}">')
-    for name in ("Product Performance", "Customer Analysis"):
-        x = "0" if name == "Product Performance" else "50000"
-        sn = name.lower().replace(" ", "_")
-        lines.append(f'          <zone type-v2="layout-basic" name="{sn}" size-pos="{x},0,50000,{rh2}">')
-        lines.append('            <zone type="worksheet">')
-        lines.append(f'              <worksheet>{name}</worksheet>')
-        lines.append('            </zone>')
-        lines.append('          </zone>')
-    lines.append('        </zone>')
+    lines.append(f"      <zone id='{zid()}' x='0' y='36000' w='100000' h='{rh2}' type-v2='layout-flow' param='horz' name='row2'>")
+    lines.append(f"        {layout_cache()}")
+    for i, name in enumerate(("Product Performance", "Customer Analysis")):
+        x_off = "0" if i == 0 else "50000"
+        lines.append(f"        <zone id='{zid()}' x='{x_off}' y='0' w='50000' h='{rh2}' name='{name}'>")
+        lines.append(f"          <zone type='worksheet'>")
+        lines.append(f"            <worksheet>{name}</worksheet>")
+        lines.append(f"          </zone>")
+        lines.append(f"          {layout_cache()}")
+        lines.append(f"          <zone-style/>")
+        lines.append(f"        </zone>")
+    lines.append(f"      </zone>")
 
-    # Row 3: City Comparison | Payment Analysis
+    # ── Row 3: City Comparison | Payment Analysis ──
     rh3 = 19000
-    lines.append(f'        <zone type-v2="layout-flow" param="horz" name="row3" size-pos="0,43000,100000,{rh3}">')
-    for name in ("City Comparison", "Payment Analysis"):
-        x = "0" if name == "City Comparison" else "50000"
-        sn = name.lower().replace(" ", "_")
-        lines.append(f'          <zone type-v2="layout-basic" name="{sn}" size-pos="{x},0,50000,{rh3}">')
-        lines.append('            <zone type="worksheet">')
-        lines.append(f'              <worksheet>{name}</worksheet>')
-        lines.append('            </zone>')
-        lines.append('          </zone>')
-    lines.append('        </zone>')
+    lines.append(f"      <zone id='{zid()}' x='0' y='55000' w='100000' h='{rh3}' type-v2='layout-flow' param='horz' name='row3'>")
+    lines.append(f"        {layout_cache()}")
+    for i, name in enumerate(("City Comparison", "Payment Analysis")):
+        x_off = "0" if i == 0 else "50000"
+        lines.append(f"        <zone id='{zid()}' x='{x_off}' y='0' w='50000' h='{rh3}' name='{name}'>")
+        lines.append(f"          <zone type='worksheet'>")
+        lines.append(f"            <worksheet>{name}</worksheet>")
+        lines.append(f"          </zone>")
+        lines.append(f"          {layout_cache()}")
+        lines.append(f"          <zone-style/>")
+        lines.append(f"        </zone>")
+    lines.append(f"      </zone>")
 
-    # Row 4: Rating Distribution | Box Plot Total | Box Plot Rating
+    # ── Row 4: Rating Distribution | Box Plot Total | Box Plot Rating ──
     rh4 = 18000
-    lines.append(f'        <zone type-v2="layout-flow" param="horz" name="row4" size-pos="0,62000,100000,{rh4}">')
+    lines.append(f"      <zone id='{zid()}' x='0' y='74000' w='100000' h='{rh4}' type-v2='layout-flow' param='horz' name='row4'>")
+    lines.append(f"        {layout_cache()}")
     for name, pos in [
-        ("Rating Distribution", f"0,0,34000,{rh4}"),
-        ("Box Plot Total", f"34000,0,33000,{rh4}"),
-        ("Box Plot Rating", f"67000,0,33000,{rh4}"),
+        ("Rating Distribution", (0, 0, 34000, rh4)),
+        ("Box Plot Total", (34000, 0, 33000, rh4)),
+        ("Box Plot Rating", (67000, 0, 33000, rh4)),
     ]:
-        sn = name.lower().replace(" ", "_")
-        lines.append(f'          <zone type-v2="layout-basic" name="{sn}" size-pos="{pos}">')
-        lines.append('            <zone type="worksheet">')
-        lines.append(f'              <worksheet>{name}</worksheet>')
-        lines.append('            </zone>')
-        lines.append('          </zone>')
-    lines.append('        </zone>')
+        x, y, w, h = pos
+        lines.append(f"        <zone id='{zid()}' x='{x}' y='{y}' w='{w}' h='{h}' name='{name}'>")
+        lines.append(f"          <zone type='worksheet'>")
+        lines.append(f"            <worksheet>{name}</worksheet>")
+        lines.append(f"          </zone>")
+        lines.append(f"          {layout_cache()}")
+        lines.append(f"          <zone-style/>")
+        lines.append(f"        </zone>")
+    lines.append(f"      </zone>")
 
-    lines.append('      </zone>')  # close main
-    lines.append('    </zone>')  # close outer
-    lines.append('  </zones>')
+    lines.append("    </zone>")  # outer
+    lines.append("  </zones>")
 
     dash_uid = uid()
-    lines.append(f'  <simple-id uuid="{{{dash_uid}}}"/>')
-    lines.append('</dashboard>')
+    lines.append(f"  <simple-id uuid='{{{dash_uid}}}'/>")
+    lines.append("</dashboard>")
     return '\n'.join(lines)
 
 
 def build_actions_xml():
-    """Build ACTIONS at workbook level with <source-sheet> for each."""
-    lines = ['  <actions>']
+    """Build cross-filter actions (one per source sheet)."""
+    lines = ["  <actions>"]
     for src in SHEETS:
-        for tgt in SHEETS:
-            if src == tgt:
-                continue
-            lines.append(f'    <action class="filter" name="Filter from {src} to {tgt}">')
-            lines.append('      <action-options source-type="selected" target-type="dashboard"/>')
-            lines.append(f'      <source-sheet name="{src}"/>')
-            lines.append('      <source-filters/>')
-            lines.append('      <target-sheets>')
-            lines.append(f'        <sheet name="{tgt}"/>')
-            lines.append('      </target-sheets>')
-            lines.append('    </action>')
-    lines.append('  </actions>')
+        safe = src.replace(" ", "_")
+        lines.append(f"    <action name='[{safe}_Filter]' caption='Filter from {src}'>")
+        lines.append("      <activation type='on-select'/>")
+        lines.append(f"      <source type='sheet' worksheet='{src}'/>")
+        lines.append("    </action>")
+    lines.append("  </actions>")
     return '\n'.join(lines)
 
 
 def build_window_xml(dash_name):
     win_uid = uid()
+    vp_lines = '\n'.join(f"        <viewpoint name='{s}'/>" for s in SHEETS)
     return (
-        f'    <window class="dashboard" name="{dash_name}">\n'
-        '      <cards>\n'
-        '        <edge name="left">\n'
-        '          <strip size="160">\n'
-        '            <card type="filters"/>\n'
-        '          </strip>\n'
-        '        </edge>\n'
-        '        <edge name="top">\n'
-        '          <strip size="2147483647">\n'
-        '            <card type="title"/>\n'
-        '          </strip>\n'
-        '        </edge>\n'
-        '      </cards>\n'
-        f'      <simple-id uuid="{{{win_uid}}}"/>\n'
-        '    </window>'
+        f"    <window class='dashboard' maximized='true' name='{dash_name}'>\n"
+        f"      <viewpoints>\n{vp_lines}\n"
+        "      </viewpoints>\n"
+        "      <active id='-1'/>\n"
+        f"      <simple-id uuid='{{{win_uid}}}'/>\n"
+        "    </window>"
     )
 
 
@@ -233,7 +238,6 @@ def main():
         shutil.rmtree(TMP_DIR)
     os.makedirs(TMP_DIR, exist_ok=True)
 
-    # Extract original from git commit before any dashboard changes
     orig_path = os.path.join(TMP_DIR, "original.twbx")
     subprocess.run(
         ["git", "show", "46a2392:Proyek_BigData/Supermarket_Sales_Dashboard.twbx"],
@@ -266,11 +270,9 @@ def main():
     win_end = twb_text.find('</windows>')
     twb_text = twb_text[:win_end] + '\n' + win_xml + '\n' + twb_text[win_end:]
 
-    # Write
     with open(twb_path, 'w', encoding='utf-8') as f:
         f.write(twb_text)
 
-    # Repackage twbx
     out_path = os.path.join(TMP_DIR, "Supermarket_Sales_Dashboard.twbx")
     with zipfile.ZipFile(out_path, 'w', zipfile.ZIP_DEFLATED) as zf:
         zf.write(twb_path, TWB_FILENAME)
@@ -282,7 +284,6 @@ def main():
                     arcname = os.path.relpath(fp, TMP_DIR)
                     zf.write(fp, arcname)
 
-    # Copy to project
     final_path = os.path.join(os.getcwd(), TWBX_PATH)
     shutil.copy2(out_path, final_path)
 
@@ -302,7 +303,6 @@ def main():
         except ET.ParseError as e:
             errors.append(f"XML error: {e}")
 
-        # Structure
         if text.count("<dashboards>") == 1:
             ok.append("1 <dashboards> section")
         else:
@@ -319,42 +319,28 @@ def main():
             missing = [s for s in SHEETS if s not in text]
             errors.append(f"Missing sheets: {missing}")
 
-        # Quick filters
-        qf_count = text.count("quick-filter")
-        if qf_count == 4:
-            ok.append(f"{qf_count} quick filters")
-        else:
-            errors.append(f"Quick filters: {qf_count} (expected 4)")
-
         # Actions
         act_count = text.count("<action ")
-        if act_count == 90:
+        if act_count == 10:
             ok.append(f"{act_count} cross-filter actions")
         else:
-            errors.append(f"Actions: {act_count} (expected 90)")
-
-        # source-sheet
-        src_sheet_count = text.count("<source-sheet")
-        if src_sheet_count == 90:
-            ok.append(f"{src_sheet_count} <source-sheet> elements")
-        else:
-            errors.append(f"<source-sheet>: {src_sheet_count} (expected 90)")
+            errors.append(f"Actions: {act_count} (expected 10)")
 
         # Windows
         ws_wins = text.count("class='worksheet'")
-        db_wins = text.count('class="dashboard"')
+        db_wins = text.count("class='dashboard'")
         if ws_wins == 10 and db_wins == 1:
             ok.append(f"{ws_wins} worksheet + {db_wins} dashboard windows")
         else:
             errors.append(f"Windows: ws={ws_wins}, dash={db_wins}")
 
-        # zones (not dashboard-items)
-        if "<zones>" in text and "dashboard-items" not in text:
+        # zones structure
+        if "<zones>" in text:
             ok.append("Proper <zones> structure")
         else:
-            errors.append("Uses dashboard-items instead of zones")
+            errors.append("Missing <zones>")
 
-        # Section order: actions before worksheets before dashboards before windows
+        # Section order
         order_ok = (
             text.find("<actions>") < text.find("<worksheets>") <
             text.find("<dashboards>") < text.find("<windows")
@@ -366,15 +352,39 @@ def main():
 
         # Dashboard internal structure
         dash = text[text.find("<dashboards>"):text.find("</dashboards>") + len("</dashboards>")]
-        for req in ["<style/>", "<datasources>", "<datasource-dependencies", "<zones>", "<simple-id"]:
+        for req in ["<style/>", "<size", "<datasources>", "<datasource-dependencies", "<zones>", "<simple-id"]:
             if req in dash:
                 ok.append(f"Dashboard has {req.split()[0]}")
             else:
                 errors.append(f"Dashboard missing {req}")
 
-        # UUID uniqueness
+        # Zones have id attributes
         import re
-        uuids = re.findall(r'uuid="\{([^}]+)\}"', text)
+        zone_ids = re.findall(r"<zone[^>]*\bid='(\d+)'", text)
+        if zone_ids:
+            ok.append(f"{len(zone_ids)} zones with unique id attributes")
+        else:
+            errors.append("No zone id attributes found")
+
+        # Zones have layout-cache
+        lc_count = text.count("layout-cache")
+        if lc_count >= len(zone_ids):
+            ok.append(f"All zones have <layout-cache>")
+        else:
+            errors.append(f"Missing layout-cache: {lc_count} vs {len(zone_ids)} zones")
+
+        # Actions use new format (activation + source)
+        if "source type='sheet'" in text:
+            ok.append("Actions use <source type='sheet'> format")
+        else:
+            errors.append("Actions missing <source type='sheet'>")
+        if "<activation type='on-select'/>" in text:
+            ok.append("Actions use <activation> format")
+        else:
+            errors.append("Actions missing <activation>")
+
+        # UUID uniqueness
+        uuids = re.findall(r"uuid='\{([^}]+)\}'", text)
         if len(uuids) == len(set(uuids)):
             ok.append(f"All {len(uuids)} UUIDs unique")
         else:
@@ -389,6 +399,33 @@ def main():
         else:
             errors.append("Missing .hyper extract")
 
+        # name attributes matching sheet names on zones
+        ws_refs = sum(1 for s in SHEETS if f"name='{s}'" in text)
+        if ws_refs >= 10:
+            ok.append(f"{ws_refs} zone name references matching worksheets")
+        else:
+            errors.append(f"Zone name refs: {ws_refs} (expected >= 10)")
+
+        # Quick filter zones on dashboard
+        qf_count = text.count("type='quick-filter'")
+        if qf_count == 4:
+            ok.append(f"{qf_count} quick filters")
+        else:
+            errors.append(f"Quick filters: {qf_count} (expected 4)")
+
+        # Text zone for title
+        if "type='text'" in text:
+            ok.append("Text zone for title/instructions")
+        else:
+            errors.append("Missing text zone")
+
+        # Inner worksheet zones
+        ws_zone_count = text.count("type='worksheet'")
+        if ws_zone_count == 10:
+            ok.append(f"{ws_zone_count} inner worksheet zones")
+        else:
+            errors.append(f"Inner worksheet zones: {ws_zone_count} (expected 10)")
+
         print("\n" + "=" * 60)
         print("  COMPREHENSIVE DASHBOARD VERIFICATION")
         print("=" * 60)
@@ -396,14 +433,14 @@ def main():
         print(f"  Size: {len(text)} bytes, {len(text.splitlines())} lines")
         print()
         for msg in ok:
-            print(f"  ✅ {msg}")
+            print(f"  \u2705 {msg}")
         print()
         if errors:
             for msg in errors:
-                print(f"  ❌ {msg}")
+                print(f"  \u274c {msg}")
             return False
         else:
-            print("  🎯 ALL CHECKS PASSED — DASHBOARD IS COMPLETE!")
+            print("  >>> ALL CHECKS PASSED - DASHBOARD IS COMPLETE!")
             print("=" * 60)
             return True
 

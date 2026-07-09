@@ -25,6 +25,9 @@
 \usepackage{changepage}
 \usepackage{amsmath}
 \usepackage{pmboxdraw}
+\usepackage{etoolbox}
+\AtBeginEnvironment{longtable}{\footnotesize}
+\AtBeginEnvironment{tabular}{\footnotesize}
 
 \providecommand{\pandocbounded}[1]{#1}
 \usepackage[export]{adjustbox}
@@ -80,7 +83,7 @@
 \makeatother
 
 \renewcommand{\arraystretch}{1.5}
-\setlength{\tabcolsep}{8pt}
+\setlength{\tabcolsep}{4pt}
 
 \lstset{
   basicstyle=\footnotesize\ttfamily,
@@ -94,6 +97,11 @@
   frame=single,
   rulecolor=\color{lightgray},
 }
+
+% Force figures to stay exactly where placed (no floating to wrong sections)
+\let\origfigure=\figure
+\let\endorigfigure=\endfigure
+\renewenvironment{figure}[1][htbp]{\origfigure[H]}{\endorigfigure}
 
 \hypersetup{
   colorlinks=true,
