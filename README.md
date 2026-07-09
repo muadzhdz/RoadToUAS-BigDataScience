@@ -49,9 +49,10 @@ Berikut adalah pembagian folder dan berkas pada branch flow:
 
 ### Cara Kerja Otomatisasi (Pipeline Execution)
 
-1.  Pastikan dependensi python seperti Pandas dan PyYAML telah terinstal di komputer.
+1.  Pastikan PyYAML telah terinstal (`pip install pyyaml`).
 2.  Buka terminal pada root direktori proyek, lalu jalankan perintah:
     ```bash
     python run_all.py
     ```
+    > **Catatan:** Di Linux, gunakan `python3 run_all.py` jika `python` tidak dikenali.
 3.  Skrip tersebut akan secara otomatis memanggil modul validasi, menyusun workbook Tableau, dan mengompilasi draf laporan serta slide ke dalam folder output_drafts/.
