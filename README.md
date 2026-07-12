@@ -1,5 +1,8 @@
 # Analisis Data Penjualan Supermarket — UAS Big Data Science
 
+**Politeknik Digital Boash Indonesia** — [pdbi.ac.id](https://pdbi.ac.id)  
+Program Studi Teknologi Rekayasa Multimedia
+
 Analisis data transaksi penjualan supermarket menggunakan **Tableau Desktop** dan **Python** dengan pendekatan Big Data 5V. Dataset mencakup 1.000 transaksi dari 3 cabang (Yangon, Mandalay, Naypyitaw) selama periode Januari -- Maret 2019.
 
 ## Identitas Kelompok
