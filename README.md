@@ -1,6 +1,6 @@
 # Analisis Data Penjualan Supermarket — UAS Big Data Science
 
-Analisis data transaksi penjualan supermarket menggunakan Tableau dengan pendekatan Big Data 5V. Dataset mencakup 1.000 transaksi dari 3 cabang (Yangon, Mandalay, Naypyitaw) selama periode Januari -- Maret 2019.
+Analisis data transaksi penjualan supermarket menggunakan **Tableau Desktop** dan **Python** dengan pendekatan Big Data 5V. Dataset mencakup 1.000 transaksi dari 3 cabang (Yangon, Mandalay, Naypyitaw) selama periode Januari -- Maret 2019.
 
 ## Identitas Kelompok
 
@@ -17,7 +17,6 @@ Analisis data transaksi penjualan supermarket menggunakan Tableau dengan pendeka
 ```
 ├── Proyek_BigData/
 │   ├── Supermarket_Sales_Dashboard_final.twbx   ← Dashboard Tableau
-│   ├── Presentasi-UAS-BigData.pdf               ← Slide presentasi
 │   └── assets/                                   ← Screenshot visualisasi
 │       ├── Data-Source.jpg
 │       ├── Data-Quality.jpg
@@ -40,13 +39,15 @@ Analisis data transaksi penjualan supermarket menggunakan Tableau dengan pendeka
 ├── dataset/
 │   ├── supermarket_sales.csv                     ← Data transaksi
 │   └── sumber_dataset.txt                        ← Metadata dataset
+├── Scripts/
+│   └── fix_twbx_extract.py                       ← Konversi .twbx ke extract Tableau Public
 ├── Laporan_UAS_BigData.pdf                       ← Laporan final PDF
 └── README.md
 ```
 
-## Visualisasi Dashboard
+## Dashboard
 
-Dashboard interaktif mencakup 7 komponen visualisasi: KPI (Total Revenue, Transactions, Products Sold, Customer Rating, Gross Income), Revenue Trend, Product Performance, Customer Analysis, Payment Analysis, Hourly Activity, dan City Comparison. Dilengkapi 6 quick filter (Day of Date, Product line, City, Payment, Hour, Customer type) serta fitur cross-filtering antar grafik.
+Dashboard interaktif mencakup 7 komponen visualisasi: KPI (Total Revenue, Transactions, Products Sold, Customer Rating, Gross Income), Revenue Trend, Product Performance, Customer Analysis, Payment Analysis, Hourly Activity, dan City Comparison. Dilengkapi 6 quick filter (Day of Date, Product line, City, Payment, Hour, Customer type) serta fitur cross-filtering dan parameter (Top N Products).
 
 ## Laporan Akademik
 
